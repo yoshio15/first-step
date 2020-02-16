@@ -1,15 +1,14 @@
 import React from 'react';
 import Routes from './Routes';
-import AppHeader from './components/AppHeader'
+import Amplify from 'aws-amplify';
+import AwsConf from './aws/awsconfig'
+
+Amplify.configure(AwsConf)
 
 const App: React.FC = () => {
   return (
-    <div>
-      <AppHeader></AppHeader>
-      <Routes></Routes>
-    </div>
+    <Routes></Routes>
   );
 }
 
 export default App;
-

@@ -35,14 +35,14 @@ class Login extends React.Component<Props, State> {
     }
     this.handleChangeUsername = this.handleChangeUsername.bind(this)
     this.handleChangePassword = this.handleChangePassword.bind(this)
-    this.logIn = this.logIn.bind(this)
+    this.signUp = this.signUp.bind(this)
   }
 
-  logIn() {
+  signUp() {
     let username = this.state.username
     let password = this.state.password
     console.log(username, password)
-    Auth.signIn(username, password)
+    Auth.signUp(username, password)
       .then((res) => { console.log(res) })
       .catch((err) => { console.log(err) })
   }
@@ -60,13 +60,13 @@ class Login extends React.Component<Props, State> {
             <Grid item xs={11}>
               <Box mt={5}></Box>
               <Typography component="h1" variant="h5">
-                ログイン
+                無料会員登録
               </Typography>
               <Box mt={2}></Box>
               <TextField variant='outlined' margin='normal' label='ユーザ名' value={this.state.username} onChange={this.handleChangeUsername} autoFocus required fullWidth></TextField>
               <TextField variant='outlined' margin='normal' label='パスワード' value={this.state.password} onChange={this.handleChangePassword} required fullWidth></TextField>
               <Box mt={7}></Box>
-              <Button variant='contained' color='primary' onClick={this.logIn} fullWidth>Login</Button>
+              <Button variant='contained' color='primary' onClick={this.signUp} fullWidth>無料会員登録 >></Button>
             </Grid>
           </Grid>
         </Paper>
