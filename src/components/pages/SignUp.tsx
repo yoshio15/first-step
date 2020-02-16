@@ -1,4 +1,5 @@
 import React from 'react';
+import * as H from 'history'
 import { Container, Button, TextField, Typography, Paper, Grid, Box } from '@material-ui/core';
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
@@ -20,7 +21,9 @@ const styles = (): StyleRules => createStyles({
   }
 })
 
-interface Props extends WithStyles<typeof styles> { }
+interface Props extends WithStyles<typeof styles> {
+  history: H.History
+}
 interface State {
   username: string,
   password: string
@@ -43,8 +46,13 @@ class Login extends React.Component<Props, State> {
     let password = this.state.password
     console.log(username, password)
     Auth.signUp(username, password)
-      .then((res) => { console.log(res) })
-      .catch((err) => { console.log(err) })
+      .then((res) => {
+        console.log(res)
+        this.props.history.push('/sign-up-done')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   handleChangeUsername(e: any) { this.setState({ username: e.target.value }) }
