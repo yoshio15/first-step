@@ -26,7 +26,8 @@ interface Props extends WithStyles<typeof styles> {
 }
 interface State {
   username: string,
-  password: string
+  password: string,
+  passwordConfirmation: string
 }
 
 class Login extends React.Component<Props, State> {
@@ -34,17 +35,21 @@ class Login extends React.Component<Props, State> {
     super(props)
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      passwordConfirmation: ''
     }
     this.handleChangeUsername = this.handleChangeUsername.bind(this)
     this.handleChangePassword = this.handleChangePassword.bind(this)
+    this.handleChangePasswordConfirmation = this.handleChangePasswordConfirmation.bind(this)
     this.signUp = this.signUp.bind(this)
+    this.isSamePassword = this.isSamePassword.bind(this)
   }
 
   signUp() {
     let username = this.state.username
     let password = this.state.password
     console.log(username, password)
+    if (password !== this.state.passwordConfirmation) return alert('パスワードが一致しませんでした。')
     Auth.signUp(username, password)
       .then((res) => {
         console.log(res)
@@ -59,6 +64,10 @@ class Login extends React.Component<Props, State> {
 
   handleChangePassword(e: any) { this.setState({ password: e.target.value }) }
 
+  handleChangePasswordConfirmation(e: any) { this.setState({ passwordConfirmation: e.target.value }) }
+
+  isSamePassword() { return this.state.password === this.state.passwordConfirmation }
+
   render() {
     const { classes } = this.props
     return (
@@ -71,8 +80,36 @@ class Login extends React.Component<Props, State> {
                 無料会員登録
               </Typography>
               <Box mt={2}></Box>
-              <TextField variant='outlined' margin='normal' label='ユーザ名' value={this.state.username} onChange={this.handleChangeUsername} autoFocus required fullWidth></TextField>
-              <TextField variant='outlined' margin='normal' label='パスワード' value={this.state.password} onChange={this.handleChangePassword} required fullWidth></TextField>
+              <TextField
+                variant='outlined'
+                margin='normal'
+                label='ユーザ名'
+                value={this.state.username}
+                onChange={this.handleChangeUsername}
+                autoFocus
+                required
+                fullWidth
+              ></TextField>
+              <TextField
+                variant='outlined'
+                margin='normal'
+                label='パスワード'
+                type='password'
+                value={this.state.password}
+                onChange={this.handleChangePassword}
+                required
+                fullWidth
+              ></TextField>
+              <TextField
+                variant='outlined'
+                margin='normal'
+                label='パスワード確認用'
+                type='password'
+                value={this.state.passwordConfirmation}
+                onChange={this.handleChangePasswordConfirmation}
+                required
+                fullWidth
+              ></TextField>
               <Box mt={7}></Box>
               <Button variant='contained' color='primary' onClick={this.signUp} fullWidth>無料会員登録 >></Button>
             </Grid>
