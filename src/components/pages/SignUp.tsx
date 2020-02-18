@@ -14,7 +14,7 @@ const styles = (): StyleRules => createStyles({
   },
   paper: {
     width: '70%',
-    height: '400px'
+    height: '440px'
   },
   grid: {
     height: '600px'
@@ -110,7 +110,7 @@ class Login extends React.Component<Props, State> {
                 required
                 fullWidth
               ></TextField>
-              <Box mt={7}></Box>
+              <Box mt={5}></Box>
               <Button variant='contained' color='primary' onClick={this.signUp} fullWidth>無料会員登録 >></Button>
             </Grid>
           </Grid>

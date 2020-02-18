@@ -13,7 +13,7 @@ const styles = (): StyleRules => createStyles({
   },
   paper: {
     width: '70%',
-    height: '400px'
+    height: '360px'
   },
   grid: {
     height: '600px'
@@ -65,7 +65,7 @@ class Login extends React.Component<Props, State> {
               <Box mt={2}></Box>
               <TextField variant='outlined' margin='normal' label='ユーザ名' value={this.state.username} onChange={this.handleChangeUsername} autoFocus required fullWidth></TextField>
               <TextField variant='outlined' margin='normal' label='パスワード' value={this.state.password} onChange={this.handleChangePassword} required fullWidth></TextField>
-              <Box mt={7}></Box>
+              <Box mt={5}></Box>
               <Button variant='contained' color='primary' onClick={this.logIn} fullWidth>Login</Button>
             </Grid>
           </Grid>
