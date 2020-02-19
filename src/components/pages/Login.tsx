@@ -4,6 +4,8 @@ import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/wit
 import createStyles from "@material-ui/core/styles/createStyles";
 import * as H from 'history'
 import { Auth } from 'aws-amplify'
+import Store from '../../store/index'
+import Actions from '../../store/action'
 
 const styles = (): StyleRules => createStyles({
   container: {
@@ -48,6 +50,7 @@ class Login extends React.Component<Props, State> {
     Auth.signIn(username, password)
       .then((res) => { 
         console.log(res)
+        Store.dispatch(Actions.updateUser(res.username))
         this.props.history.push('works-list')
        })
       .catch((err) => { console.log(err) })
@@ -59,6 +62,7 @@ class Login extends React.Component<Props, State> {
 
   render() {
     const { classes } = this.props
+    console.log(Store)
     return (
       <Container className={classes.container}>
         <Paper className={classes.paper} variant='outlined'>

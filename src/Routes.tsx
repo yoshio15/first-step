@@ -20,8 +20,6 @@ const Routes: React.FC = () => {
         <Route path='/sign-up-done' exact component={SignUpDone} />
         <Route path='/works-list' exact component={WorksList} />
       </Switch>
-      {/* <Link to='/'>to Top</Link>
-      <Link to='/login'>to Login</Link> */}
     </Router>
   );
 }
