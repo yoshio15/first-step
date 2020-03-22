@@ -1,6 +1,6 @@
 import React from 'react';
 import * as H from 'history'
-import { Container, Button, TextField, Typography, Paper, Grid, Box } from '@material-ui/core';
+import { Container, Button, TextField, Typography, Paper, Grid, Box, LinearProgress } from '@material-ui/core';
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import { Auth } from 'aws-amplify'
@@ -28,6 +28,7 @@ interface State {
   username: string,
   password: string,
   passwordConfirmation: string
+  isShownProgress: boolean
 }
 
 class Login extends React.Component<Props, State> {
@@ -36,7 +37,8 @@ class Login extends React.Component<Props, State> {
     this.state = {
       username: '',
       password: '',
-      passwordConfirmation: ''
+      passwordConfirmation: '',
+      isShownProgress: false
     }
     this.handleChangeUsername = this.handleChangeUsername.bind(this)
     this.handleChangePassword = this.handleChangePassword.bind(this)
@@ -48,14 +50,21 @@ class Login extends React.Component<Props, State> {
   signUp() {
     let username = this.state.username
     let password = this.state.password
+    this.setState({ isShownProgress: true })
     console.log(username, password)
-    if (password !== this.state.passwordConfirmation) return alert('パスワードが一致しませんでした。')
+    if (password !== this.state.passwordConfirmation) {
+      this.setState({ isShownProgress: false })
+      alert('パスワードが一致しませんでした。')
+      return
+    }
     Auth.signUp(username, password)
       .then((res) => {
         console.log(res)
+        this.setState({ isShownProgress: false })
         this.props.history.push('/sign-up-done')
       })
       .catch((err) => {
+        this.setState({ isShownProgress: false })
         console.log(err)
       })
   }
@@ -73,6 +82,7 @@ class Login extends React.Component<Props, State> {
     return (
       <Container className={classes.container}>
         <Paper className={classes.paper} variant='outlined'>
+          {this.state.isShownProgress && <LinearProgress />}
           <Grid container justify='center'>
             <Grid item xs={11}>
               <Box mt={5}></Box>

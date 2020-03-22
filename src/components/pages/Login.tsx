@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Button, TextField, Typography, Paper, Grid, Box } from '@material-ui/core';
+import { Container, Button, TextField, Typography, Paper, Grid, Box, LinearProgress } from '@material-ui/core';
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import * as H from 'history'
@@ -25,18 +25,20 @@ const styles = (): StyleRules => createStyles({
 
 interface Props extends WithStyles<typeof styles> {
   history: H.History
- }
+}
 interface State {
   username: string,
-  password: string
+  password: string,
+  isShownProgress: boolean
 }
 
 class Login extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      username: '',
-      password: ''
+      username: 'testuser',
+      password: 'password1',
+      isShownProgress: false
     }
     this.handleChangeUsername = this.handleChangeUsername.bind(this)
     this.handleChangePassword = this.handleChangePassword.bind(this)
@@ -47,12 +49,14 @@ class Login extends React.Component<Props, State> {
     let username = this.state.username
     let password = this.state.password
     console.log(username, password)
+    this.setState({isShownProgress: true})
     Auth.signIn(username, password)
-      .then((res) => { 
+      .then((res) => {
         console.log(res)
         Store.dispatch(Actions.updateUser(res.username))
+        this.setState({isShownProgress: false})
         this.props.history.push('works-list')
-       })
+      })
       .catch((err) => { console.log(err) })
   }
 
@@ -66,6 +70,7 @@ class Login extends React.Component<Props, State> {
     return (
       <Container className={classes.container}>
         <Paper className={classes.paper} variant='outlined'>
+          {this.state.isShownProgress && <LinearProgress />}
           <Grid container justify='center'>
             <Grid item xs={11}>
               <Box mt={5}></Box>
