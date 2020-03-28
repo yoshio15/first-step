@@ -8,6 +8,7 @@ import SignUp from './components/pages/SignUp';
 import Top from './components/pages/Top';
 import SignUpDone from './components/pages/SignUpDone'
 import WorksList from './components/pages/WorksList'
+import PostWork from './components/pages/PostWork'
 
 let history = createBrowserHistory();
 const Routes: React.FC = () => {
@@ -22,6 +23,7 @@ const Routes: React.FC = () => {
         <Auth>
           <Switch>
             <Route path='/works-list' exact component={WorksList} />
+            <Route path='/post-work' exact component={PostWork} />
           </Switch>
         </Auth>
       </Switch>

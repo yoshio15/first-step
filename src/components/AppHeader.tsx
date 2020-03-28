@@ -35,7 +35,10 @@ const AppHeader: React.FC = () => {
             className={classes.title}
           >First-Step</Typography>
           <Create color='primary' />
-          <Button>投稿する</Button>}
+          <Button
+            component={Link}
+            to='/post-work'
+          >投稿する</Button>
         </Toolbar>
       </AppBar>
     )
