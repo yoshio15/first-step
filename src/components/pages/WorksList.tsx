@@ -2,6 +2,7 @@ import React from 'react'
 import { Container, Paper, Grid, Box } from '@material-ui/core'
 import { API } from 'aws-amplify'
 import Store from '../../store/index'
+import { PATHS, API_GATEWAY } from '../../constants/config'
 
 interface ResponseListI {
   workId: string,
@@ -28,8 +29,8 @@ class WorksList extends React.Component {
     this.getItemList()
   }
   async getItemList() {
-    const apiName = 'dev-first-step';
-    const path = '/get-works-list';
+    const apiName = API_GATEWAY.NAME;
+    const path = PATHS.GET.WORKS_LIST_PATH;
     const option = {}
     let responseList!: ResponseListI[];
     await API.get(apiName, path, option)
