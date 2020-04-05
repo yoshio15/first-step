@@ -1,9 +1,10 @@
 export const PATHS = {
   GET: {
-    WORKS_LIST_PATH: '/get-works-list'
+    WORKS_LIST_PATH: '/get-works-list',
+    S3_PRESIGNED_URL_PATH: '/get-s3-presigned-url'
   },
   POST: {
-    NEW_WORK_PATH: '/post-work'
+    NEW_WORK_PATH: '/post-work',
   }
 }
 

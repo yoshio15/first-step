@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { API } from 'aws-amplify'
+import axios from 'axios'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { Container, Paper, Grid, TextField, Button, Box, Icon } from '@material-ui/core'
 import AttachFileIcon from '@material-ui/icons/AttachFile'
@@ -33,8 +34,9 @@ const styles = (theme: Theme): StyleRules => createStyles({
 
 interface Props extends WithStyles<typeof styles> { }
 interface State {
+  workId: string,
   title: string,
-  discription: string,
+  description: string,
   fileName: string,
   file: File | undefined
 }
@@ -44,8 +46,9 @@ class PostWork extends React.Component<Props, State> {
     super(props)
   }
   state: State = {
+    workId: '',
     title: '',
-    discription: '',
+    description: '',
     fileName: '',
     file: undefined
   }
@@ -62,16 +65,52 @@ class PostWork extends React.Component<Props, State> {
     })
   }
   private handleTitleInput = (e: any) => { this.setState({ title: e.target.value }) }
-  private handleDiscriptionInput = (e: any) => { this.setState({ discription: e.target.value }) }
-  private postWork = () => {
+  private handleDescriptionInput = (e: any) => { this.setState({ description: e.target.value }) }
+  private generateReqest = (workId: string) => {
+    return {
+      workId,
+      title: this.state.title,
+      description: this.state.description
+    }
+  }
+  private getUniqueId = () => {
+    return Math.floor(1000 * Math.random()).toString(16) + Date.now().toString(16)
+  }
+  private postWork = async () => {
+    const workId = this.getUniqueId()
+    this.setState({ workId })
     console.log(JSON.stringify(this.state))
-    const request = {}
+    const request = {
+      body: this.generateReqest(workId)
+    }
+    console.log('Request: ' + JSON.stringify(request))
+    // DynamoDBへのメタ情報の登録
     API.post(API_GATEWAY.NAME, PATHS.POST.NEW_WORK_PATH, request)
       .then(response => {
         console.log(response)
       }).catch(error => {
         console.log(error)
       })
+    // S3の署名つきURLを取得
+    const option = {}
+    const path = `${PATHS.GET.S3_PRESIGNED_URL_PATH}/${workId}`
+    console.log('PATH: ' + path)
+    const url = await API.get(
+      API_GATEWAY.NAME,
+      path,
+      option
+    )
+    console.log('URL: ' + url)
+    // S3への実ファイルのアップロード（キー情報はWorkId）
+    const file = this.state.file
+    console.log(file)
+    axios
+      .put(url, file, { headers: { 'Content-Type': 'text/html' } })
+      .then(res => { console.log(res) })
+      .catch(err => { console.log(err) })
+  }
+  componentDidMount() {
+    console.log(this.getUniqueId())
   }
   render() {
     const { classes } = this.props
@@ -118,8 +157,8 @@ class PostWork extends React.Component<Props, State> {
                     rows="10"
                     variant="outlined"
                     margin="normal"
-                    value={this.state.discription}
-                    onChange={this.handleDiscriptionInput}
+                    value={this.state.description}
+                    onChange={this.handleDescriptionInput}
                   />
                 </Grid>
               </Grid>
@@ -163,6 +202,7 @@ class PostWork extends React.Component<Props, State> {
                       >戻る</Button>
                     </Grid>
                     <Grid item>
+                      {/* Todo 押下時にダイアログを表示、入力値バリデーション */}
                       <Button
                         variant="contained"
                         color="primary"
