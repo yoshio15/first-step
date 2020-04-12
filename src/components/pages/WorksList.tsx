@@ -1,22 +1,26 @@
 import React from 'react'
-import { Container, Paper, Grid, Box } from '@material-ui/core'
+import { Container, Paper, Grid, Box, Typography } from '@material-ui/core'
 import { API } from 'aws-amplify'
 import Store from '../../store/index'
 import { PATHS, API_GATEWAY } from '../../constants/config'
 
+// Stateとして保持するリストのインターフェース
 interface ResponseListI {
   workId: string,
   title: string,
   description: string,
   userId: string,
-  userName: string
+  userName: string,
+  postedAt: string
 }
+// DBから取得するリストのインターフェース
 interface ResponseI {
   work_id: string,
   title: string,
   description: string,
   user_id: string,
-  user_name: string
+  user_name: string,
+  posted_at: number
 }
 interface StateI {
   itemList: ResponseListI[]
@@ -50,10 +54,12 @@ class WorksList extends React.Component {
         title: item.title,
         description: item.description,
         userId: item.user_id,
-        userName: item.user_name
+        userName: item.user_name,
+        postedAt: (new Date(item.posted_at * 1000)).toLocaleDateString()
       }
     })
   }
+
   render() {
     console.log(Store.getState().store)
     return (
@@ -61,11 +67,18 @@ class WorksList extends React.Component {
         <h2>みんなの作品一覧</h2>
         {this.state.itemList.map(item => (
           <Grid container justify='center'>
-            <Grid xs={11} item>
+            <Grid xs={7} item>
               <Paper key={item.workId}>
                 <h3>{item.title}</h3>
-                <div>{item.description}</div>
-                <div>{item.userName}</div>
+                {/* <div>{item.description}</div> */}
+                <Grid container>
+                  <Grid xs={3} item>
+                    <Typography variant='body2'>投稿者：{item.userName}</Typography>
+                  </Grid>
+                  <Grid xs={3} item>
+                    <Typography variant='body2'>投稿日時：{item.postedAt}</Typography>
+                  </Grid>
+                </Grid>
               </Paper>
               <Box mb={1}></Box>
             </Grid>
