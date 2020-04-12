@@ -198,7 +198,7 @@ class PostWork extends React.Component<Props, State> {
                       <Button
                         variant="contained"
                         component={Link}
-                        to='work-list'
+                        to='works-list'
                       >戻る</Button>
                     </Grid>
                     <Grid item>
