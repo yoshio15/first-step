@@ -1,9 +1,16 @@
 import React from 'react'
-import { Container, Paper, Grid, Box, Typography } from '@material-ui/core'
+import * as H from 'history'
+import { Container, Grid, Box, Typography, Card, CardContent, ButtonBase, createStyles } from '@material-ui/core'
+import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import { API } from 'aws-amplify'
 import Store from '../../store/index'
 import { PATHS, API_GATEWAY } from '../../constants/config'
 
+const styles = (): StyleRules => createStyles({
+  workCard: {
+    cursor: 'pointer'
+  }
+})
 // Stateとして保持するリストのインターフェース
 interface ResponseListI {
   workId: string,
@@ -25,7 +32,13 @@ interface ResponseI {
 interface StateI {
   itemList: ResponseListI[]
 }
-class WorksList extends React.Component {
+interface PropsI extends WithStyles<typeof styles> {
+  history: H.History
+}
+class WorksList extends React.Component<PropsI, StateI> {
+  constructor(props: PropsI) {
+    super(props)
+  }
   state: StateI = {
     itemList: []
   }
@@ -59,29 +72,39 @@ class WorksList extends React.Component {
       }
     })
   }
+  goToDescriptionPage(workId: string) {
+    // Todo: SignUpを参考にページ遷移処理を追加
+    console.log('goToDescriptionPage ID: ' + workId)
+    this.props.history.push(`/work-description/${workId}`)
+  }
 
   render() {
     console.log(Store.getState().store)
+    const {classes} = this.props
     return (
       <Container>
         <h2>みんなの作品一覧</h2>
         {this.state.itemList.map(item => (
           <Grid container justify='center'>
-            <Grid xs={7} item>
-              <Paper key={item.workId}>
-                <h3>{item.title}</h3>
-                {/* <div>{item.description}</div> */}
-                <Grid container>
-                  <Grid xs={3} item>
-                    <Typography variant='body2'>投稿者：{item.userName}</Typography>
-                  </Grid>
-                  <Grid xs={3} item>
-                    <Typography variant='body2'>投稿日時：{item.postedAt}</Typography>
-                  </Grid>
-                </Grid>
-              </Paper>
-              <Box mb={1}></Box>
-            </Grid>
+            {/* <ButtonBase> */}
+              <Grid xs={7} item>
+                <Card key={item.workId} className={classes.workCard} variant='outlined' onClick={ () => this.goToDescriptionPage(item.workId)}>
+                  <CardContent>
+                    <Typography variant='h6'>{item.title}</Typography>
+                    {/* <div>{item.description}</div> */}
+                    <Grid container>
+                      <Grid xs={3} item>
+                        <Typography variant='body2' color='textSecondary'>投稿者：{item.userName}</Typography>
+                      </Grid>
+                      <Grid xs={3} item>
+                        <Typography variant='body2' color='textSecondary'>投稿日時：{item.postedAt}</Typography>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+                <Box mb={1}></Box>
+              </Grid>
+            {/* </ButtonBase> */}
           </Grid>
         ))}
       </Container>
@@ -89,4 +112,4 @@ class WorksList extends React.Component {
   }
 }
 
-export default WorksList
+export default withStyles(styles)(WorksList)
