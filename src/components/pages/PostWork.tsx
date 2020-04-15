@@ -2,12 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { API } from 'aws-amplify'
 import axios from 'axios'
+import * as H from 'history'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { Container, Paper, Grid, TextField, Button, Box, Icon } from '@material-ui/core'
+import { Container, Paper, Grid, TextField, Button, Box } from '@material-ui/core'
 import AttachFileIcon from '@material-ui/icons/AttachFile'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import Create from '@material-ui/icons/Create';
+import PostDialog from '../parts/PostDialog'
 import { PATHS, API_GATEWAY } from '../../constants/config'
 
 const styles = (theme: Theme): StyleRules => createStyles({
@@ -32,13 +34,16 @@ const styles = (theme: Theme): StyleRules => createStyles({
   }
 })
 
-interface Props extends WithStyles<typeof styles> { }
+interface Props extends WithStyles<typeof styles> {
+  history: H.History
+ }
 interface State {
   workId: string,
   title: string,
   description: string,
   fileName: string,
-  file: File | undefined
+  file: File | undefined,
+  isOpen: boolean
 }
 
 class PostWork extends React.Component<Props, State> {
@@ -50,7 +55,8 @@ class PostWork extends React.Component<Props, State> {
     title: '',
     description: '',
     fileName: '',
-    file: undefined
+    file: undefined,
+    isOpen: false
   }
   private clickFileUploadBtn = () => {
     document.getElementById('file-input')!.click()
@@ -76,6 +82,7 @@ class PostWork extends React.Component<Props, State> {
   private getUniqueId = () => {
     return Math.floor(1000 * Math.random()).toString(16) + Date.now().toString(16)
   }
+  private openDialog = () => this.setState({ isOpen: true })
   private postWork = async () => {
     const workId = this.getUniqueId()
     this.setState({ workId })
@@ -106,7 +113,11 @@ class PostWork extends React.Component<Props, State> {
     console.log(file)
     axios
       .put(url, file, { headers: { 'Content-Type': 'text/html' } })
-      .then(res => { console.log(res) })
+      .then(res => {
+        console.log(res)
+        this.setState({ isOpen: false })
+        this.props.history.push('works-list')
+      })
       .catch(err => { console.log(err) })
   }
   componentDidMount() {
@@ -206,7 +217,7 @@ class PostWork extends React.Component<Props, State> {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={this.postWork}
+                        onClick={this.openDialog}
                       >
                         <Create />投稿する
                       </Button>
@@ -214,6 +225,11 @@ class PostWork extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
               </Grid>
+              <PostDialog
+                isOpen={this.state.isOpen}
+                handleClose={() => this.setState({ isOpen: false })}
+                execute={this.postWork}
+              />
               <div className={classes.spacer}></div>
             </Paper>
           </Grid>
