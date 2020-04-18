@@ -61,6 +61,7 @@ class WorkDescription extends React.Component<IProps, IState> {
         console.log(err)
       })
   }
+  private goToWorkPage = () => { window.open(`${PATHS.BASE_URL}/${this.state.workId}`, '_blank') }
   render() {
     console.log(this.state)
     return (
@@ -93,6 +94,7 @@ class WorkDescription extends React.Component<IProps, IState> {
                 <Button
                   color='primary'
                   variant='contained'
+                  onClick={() => this.goToWorkPage()}
                 >作品を見る >></Button>
               </CardActions>
             </Card>
