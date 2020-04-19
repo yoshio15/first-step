@@ -4,7 +4,9 @@ import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Create from '@material-ui/icons/Create';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Store from '../store/index'
+import Actions from '../store/action'
 
 const useStyle = makeStyles(theme => ({
   headerStyle: {
@@ -24,6 +26,10 @@ const useStyle = makeStyles(theme => ({
 })
 )
 
+const logout = () => {
+  Store.dispatch(Actions.updateUser(''))
+}
+
 const AppHeader: React.FC = () => {
   const classes = useStyle()
   if (Store.getState().store.user) {
@@ -34,11 +40,17 @@ const AppHeader: React.FC = () => {
             variant='h5'
             className={classes.title}
           >First-Step</Typography>
-          <Create color='primary' />
           <Button
+            // variant='outlined'
+            onClick={() => logout()}
+            component={Link}
+            to='/login'
+          ><ExitToAppIcon color='primary' />ログアウト</Button>
+          <Button
+            // variant='outlined'
             component={Link}
             to='/post-work'
-          >投稿する</Button>
+          ><Create color='primary' />投稿する</Button>
         </Toolbar>
       </AppBar>
     )
