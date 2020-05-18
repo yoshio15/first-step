@@ -73,7 +73,11 @@ class WorkDescription extends React.Component<IProps, IState> {
               <CardContent>
                 <Grid container>
                   <Grid item sm={2}>
-                    <Typography color='textSecondary'>{this.state.userName}</Typography>
+                    <Link to={`/mypage/${this.state.userId}`}>
+                      <Typography color='textSecondary'>
+                        {this.state.userName}
+                      </Typography>
+                    </Link>
                   </Grid>
                   <Grid item sm={2}>
                     <Typography color='textSecondary'>{this.state.postedAt}</Typography>
