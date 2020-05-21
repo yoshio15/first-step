@@ -3,6 +3,14 @@ import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, Card
 import { API } from 'aws-amplify'
 import { PATHS, API_GATEWAY } from '../../constants/config'
 
+interface IWorkEntity {
+  work_id: string,
+  title: string,
+  description: string,
+  user_id: string,
+  user_name: string,
+  posted_at: number
+}
 interface IProps {
   match: {
     params: { id: string }
@@ -13,7 +21,8 @@ interface IState {
   userName: string,
   userSummary: string,
   postedWorkIdList: string[],
-  userIconUrl: string
+  userIconUrl: string,
+  usersWorksList: IWorkEntity[]
 }
 class MyPage extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -24,7 +33,8 @@ class MyPage extends React.Component<IProps, IState> {
     userName: '',
     userSummary: '',
     postedWorkIdList: [],
-    userIconUrl: ''
+    userIconUrl: '',
+    usersWorksList: []
   }
   componentDidMount() {
     this.getUser()
@@ -41,7 +51,8 @@ class MyPage extends React.Component<IProps, IState> {
           userId: res.user_id,
           userName: res.user_name,
           userSummary: res.user_summary,
-          postedWorkIdList: res.posted_work_id_list
+          postedWorkIdList: res.posted_work_id_list,
+          usersWorksList: res.usersWorksList
         })
         console.log(typeof res.icon_binary)
         const decodedIconBinary = Buffer.from(res.icon_binary, 'base64');
@@ -80,6 +91,25 @@ class MyPage extends React.Component<IProps, IState> {
                     <Typography>{this.state.userSummary}</Typography>
                   </Grid>
                 </Grid>
+                <Box mt={5}></Box>
+                {this.state.usersWorksList.map(item => (
+                  <Container>
+                    <Card key={item.work_id} variant='outlined'>
+                      <CardContent>
+                        <Typography variant='h6'>{item.title}</Typography>
+                        <Grid container>
+                          <Grid xs={6} item>
+                            <Typography variant='body2' color='textSecondary'>投稿者：{item.user_name}</Typography>
+                          </Grid>
+                          <Grid xs={6} item>
+                            <Typography variant='body2' color='textSecondary'>投稿日時：{item.posted_at}</Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                    <Box mt={2}></Box>
+                  </Container>
+                ))}
               </CardContent>
             </Card>
           </Grid>
