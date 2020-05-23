@@ -73,7 +73,23 @@ class MyPageEdit extends React.Component<IProps, IState> {
   private handleUserNameInput = (e: any) => { this.setState({ userName: e.target.value }) }
   private handleUserSummaryInput = (e: any) => { this.setState({ userSummary: e.target.value }) }
   private goBackToMyPage = () => { this.props.history.push(`/mypage/${this.state.userId}`) }
-  private updateUserProfile = () => {}
+  private updateUserProfile = () => {
+    const request = {
+      body: {
+        userId: this.state.userId,
+        userName: this.state.userName,
+        userSummary: this.state.userSummary
+      }
+    }
+    API.post(API_GATEWAY.NAME, PATHS.POST.UPDATE_USER_PATH, request)
+      .then(res => {
+        console.log(res)
+        this.goBackToMyPage()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
   render() {
     console.log(this.state)
     return (
@@ -132,6 +148,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                   <Button
                     color='primary'
                     variant='outlined'
+                    onClick={() => {this.updateUserProfile()}}
                   >保存</Button>
                 </CardActions>
               </CardContent>

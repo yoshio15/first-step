@@ -7,7 +7,8 @@ export const PATHS = {
   },
   POST: {
     NEW_WORK_PATH: '/post-work',
-    NEW_USER_PATH: '/post-user'
+    NEW_USER_PATH: '/post-user',
+    UPDATE_USER_PATH: '/update-user'
   },
   BASE_URL: 'https://dev-first-step-works.s3-ap-northeast-1.amazonaws.com'
 }
