@@ -11,6 +11,7 @@ import WorksList from './components/pages/WorksList'
 import PostWork from './components/pages/PostWork'
 import WorkDescription from './components/pages/WorkDescription'
 import MyPage from './components/pages/MyPage'
+import MyPageEdit from './components/pages/MyPageEdit'
 
 let history = createBrowserHistory();
 const Routes: React.FC = () => {
@@ -28,6 +29,7 @@ const Routes: React.FC = () => {
             <Route path='/post-work' exact component={PostWork} />
             <Route path='/work-description/:id' exact component={WorkDescription} />
             <Route path='/mypage/:id' exact component={MyPage} />
+            <Route path='/mypage/edit/:id' exact component={MyPageEdit} />
           </Switch>
         </Auth>
       </Switch>

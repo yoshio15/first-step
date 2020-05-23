@@ -1,4 +1,5 @@
 import React from 'react'
+import * as H from 'history'
 import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography } from '@material-ui/core'
 import { API } from 'aws-amplify'
 import { PATHS, API_GATEWAY } from '../../constants/config'
@@ -12,6 +13,7 @@ interface IWorkEntity {
   posted_at: number
 }
 interface IProps {
+  history: H.History,
   match: {
     params: { id: string }
   }
@@ -68,11 +70,18 @@ class MyPage extends React.Component<IProps, IState> {
         console.log(err)
       })
   }
+
+  private goToEditPage = () => {
+    this.props.history.push(`/mypage/edit/${this.state.userId}`)
+  }
+  private goToDescriptionPage = (workId: string) => {
+    this.props.history.push(`/work-description/${workId}`)
+  }
   render() {
     return (
       <Container>
         <Grid container justify='center'>
-          <Grid item sm={7}>
+          <Grid item sm={9}>
             <Box mt={5}></Box>
             <Card variant='outlined'>
               <CardContent>
@@ -86,6 +95,11 @@ class MyPage extends React.Component<IProps, IState> {
                   <Grid item sm={3}>
                     <img src={this.state.userIconUrl} />
                     <Typography>{this.state.userName}</Typography>
+                    <Button
+                      color='inherit'
+                      variant='outlined'
+                      onClick={() => this.goToEditPage()}
+                    >プロフィールを編集する</Button>
                   </Grid>
                   <Grid item sm={9}>
                     <Typography>{this.state.userSummary}</Typography>
@@ -94,7 +108,7 @@ class MyPage extends React.Component<IProps, IState> {
                 <Box mt={5}></Box>
                 {this.state.usersWorksList.map(item => (
                   <Container>
-                    <Card key={item.work_id} variant='outlined'>
+                    <Card key={item.work_id} variant='outlined' onClick={() => this.goToDescriptionPage(item.work_id)}>
                       <CardContent>
                         <Typography variant='h6'>{item.title}</Typography>
                         <Grid container>
