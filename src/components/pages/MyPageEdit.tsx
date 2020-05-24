@@ -1,5 +1,6 @@
 import React from 'react'
 import * as H from 'history'
+import axios from 'axios'
 import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography } from '@material-ui/core'
 import { API } from 'aws-amplify'
 import { PATHS, API_GATEWAY } from '../../constants/config'
@@ -24,6 +25,9 @@ interface IState {
   userSummary: string,
   postedWorkIdList: string[],
   userIconUrl: string,
+  defaultUserIconUrl: string,
+  file: File | undefined,
+  fileType: string,
   usersWorksList: IWorkEntity[]
 }
 class MyPageEdit extends React.Component<IProps, IState> {
@@ -36,6 +40,9 @@ class MyPageEdit extends React.Component<IProps, IState> {
     userSummary: '',
     postedWorkIdList: [],
     userIconUrl: '',
+    defaultUserIconUrl: '',
+    file: undefined,
+    fileType: '',
     usersWorksList: []
   }
   componentDidMount() {
@@ -64,7 +71,10 @@ class MyPageEdit extends React.Component<IProps, IState> {
         // Blobデータから、それを表示可能なURLを生成する.
         const url = (window.URL || window.webkitURL).createObjectURL(blob)
         console.log(url)
-        this.setState({ userIconUrl: url })
+        this.setState({
+          userIconUrl: url,
+          defaultUserIconUrl: url
+        })
       })
       .catch(err => {
         console.log(err)
@@ -73,7 +83,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
   private handleUserNameInput = (e: any) => { this.setState({ userName: e.target.value }) }
   private handleUserSummaryInput = (e: any) => { this.setState({ userSummary: e.target.value }) }
   private goBackToMyPage = () => { this.props.history.push(`/mypage/${this.state.userId}`) }
-  private updateUserProfile = () => {
+  private updateUserProfile = async () => {
     const request = {
       body: {
         userId: this.state.userId,
@@ -82,13 +92,49 @@ class MyPageEdit extends React.Component<IProps, IState> {
       }
     }
     API.post(API_GATEWAY.NAME, PATHS.POST.UPDATE_USER_PATH, request)
-      .then(res => {
+      .then(async res => {
         console.log(res)
-        this.goBackToMyPage()
+        if (this.state.file) {
+          const path = `${PATHS.GET.S3_PRESIGNED_URL_FOR_USER_ICON_PATH}/${this.state.userId}/${this.state.fileType}`
+          const option = {}
+          console.log(`PATH: ${path}`)
+          const url = await API.get(
+            API_GATEWAY.NAME,
+            path,
+            option
+          )
+          console.log(`URL: ${url}`)
+          console.log(`FILE_TYPE: ${this.state.fileType}`)
+          const file = this.state.file
+          axios
+            .put(url, file, { headers: { 'Content-Type': this.state.fileType } })
+            .then(res => {
+              console.log(res)
+              this.goBackToMyPage()
+            })
+            .catch(err => { console.log(err) })
+        } else {
+          this.goBackToMyPage()
+        }
       })
       .catch(err => {
         console.log(err)
       })
+  }
+  private fileHandler = (e: any) => {
+    e.persist()
+    console.log(e.target.files[0])
+    const file = e.target.files[0]
+    const createObjectURL = (window.URL || window.webkitURL).createObjectURL
+    const iconUrl = createObjectURL(file)
+    this.setState({
+      userIconUrl: iconUrl,
+      file: file,
+      fileType: file.type
+    })
+  }
+  private clickFileUploadBtn = () => {
+    document.getElementById('file-input')!.click()
   }
   render() {
     console.log(this.state)
@@ -101,7 +147,11 @@ class MyPageEdit extends React.Component<IProps, IState> {
               <CardContent>
                 <Grid container justify='center'>
                   <Grid item>
-                    <img src={this.state.userIconUrl} width='32' height='32' />
+                    <img
+                      src={this.state.defaultUserIconUrl}
+                      width='32'
+                      height='32'
+                    />
                   </Grid>
                   <Grid item>
                     <Typography variant='h6'>{this.state.userName} プロフィール編集</Typography>
@@ -110,7 +160,19 @@ class MyPageEdit extends React.Component<IProps, IState> {
                 <Box mt={3}></Box>
                 <Grid container>
                   <Grid item sm={2}>
-                    <img src={this.state.userIconUrl} width='104' height='104' />
+                    <img
+                      src={this.state.userIconUrl}
+                      width='104'
+                      height='104'
+                      onClick={() => this.clickFileUploadBtn()}
+                    />
+                    <input
+                      id="file-input"
+                      type="file"
+                      value=""
+                      style={{ display: "none" }}
+                      onChange={this.fileHandler}
+                    />
                   </Grid>
                   <Grid item sm={10}>
                     <Typography>ユーザ名</Typography>
@@ -148,7 +210,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                   <Button
                     color='primary'
                     variant='outlined'
-                    onClick={() => {this.updateUserProfile()}}
+                    onClick={() => { this.updateUserProfile() }}
                   >保存</Button>
                 </CardActions>
               </CardContent>
