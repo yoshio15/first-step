@@ -93,7 +93,7 @@ class MyPage extends React.Component<IProps, IState> {
                 <Box mt={3}></Box>
                 <Grid container>
                   <Grid item sm={3}>
-                    <img src={this.state.userIconUrl} />
+                    <img src={this.state.userIconUrl} width='104' height='104'/>
                     <Typography>{this.state.userName}</Typography>
                     <Button
                       color='inherit'
