@@ -1,9 +1,11 @@
 import React from 'react';
 import * as H from 'history'
+import { API } from 'aws-amplify'
 import { Container, Button, TextField, Typography, Paper, Grid, Box, LinearProgress } from '@material-ui/core';
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import { Auth } from 'aws-amplify'
+import { PATHS, API_GATEWAY } from '../../constants/config'
 
 const styles = (): StyleRules => createStyles({
   container: {
@@ -60,8 +62,18 @@ class Login extends React.Component<Props, State> {
     Auth.signUp(username, password)
       .then((res) => {
         console.log(res)
-        this.setState({ isShownProgress: false })
-        this.props.history.push('/sign-up-done')
+        const request = {
+          body: { username }
+        }
+        API.post(API_GATEWAY.NAME, PATHS.POST.NEW_USER_PATH, request)
+          .then(response => {
+            console.log(response)
+            this.props.history.push('/sign-up-done')
+          }).catch(error => {
+            console.log(error)
+          }).finally(() => {
+            this.setState({ isShownProgress: false })
+          })
       })
       .catch((err) => {
         this.setState({ isShownProgress: false })
