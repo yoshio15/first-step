@@ -15,7 +15,10 @@ interface IResponse {
 }
 interface IProps {
   match: {
-    params: { id: string }
+    params: {
+      work_id: string,
+      user_id: string
+    }
   }
 }
 interface IState {
@@ -43,9 +46,11 @@ class WorkDescription extends React.Component<IProps, IState> {
   }
   async getWork() {
     console.log('getWork')
-    console.log(this.props.match.params.id)
-    const id = this.props.match.params.id
-    const path = `${PATHS.GET.WORK_PATH}/${id}`
+    console.log('WORK_ID: '+this.props.match.params.work_id)
+    console.log('USER_ID: '+this.props.match.params.user_id)
+    const workId = this.props.match.params.work_id
+    const userId = this.props.match.params.user_id
+    const path = `${PATHS.GET.WORK_PATH}/${workId}/${userId}`
     await API.get(API_GATEWAY.NAME, path, {})
       .then(res => {
         console.log(res)

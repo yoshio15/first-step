@@ -9,6 +9,10 @@ import { PATHS, API_GATEWAY } from '../../constants/config'
 const styles = (): StyleRules => createStyles({
   workCard: {
     cursor: 'pointer'
+  },
+  userIcon: {
+    borderRadius: '50%',
+    // border: '2px solid #000'
   }
 })
 // Stateとして保持するリストのインターフェース
@@ -18,6 +22,7 @@ interface ResponseListI {
   description: string,
   userId: string,
   userName: string,
+  userIconImg: string,
   postedAt: string
 }
 // DBから取得するリストのインターフェース
@@ -27,6 +32,7 @@ interface ResponseI {
   description: string,
   user_id: string,
   user_name: string,
+  user_icon_img: string,
   posted_at: number
 }
 interface StateI {
@@ -68,45 +74,58 @@ class WorksList extends React.Component<PropsI, StateI> {
         description: item.description,
         userId: item.user_id,
         userName: item.user_name,
+        userIconImg: item.user_icon_img,
         postedAt: (new Date(item.posted_at * 1000)).toLocaleDateString()
       }
     })
   }
-  goToDescriptionPage(workId: string) {
-    // Todo: SignUpを参考にページ遷移処理を追加
-    console.log('goToDescriptionPage ID: ' + workId)
-    this.props.history.push(`/work-description/${workId}`)
+  goToDescriptionPage(workId: string, userId: string) {
+    console.log('goToDescriptionPage WORK_ID: ' + workId)
+    console.log('goToDescriptionPage USER_ID: ' + userId)
+    this.props.history.push(`/work-description/${workId}/${userId}`)
   }
 
   render() {
     console.log(Store.getState().store)
-    const {classes} = this.props
+    const { classes } = this.props
     return (
       <Container>
-        <h2>みんなの作品一覧</h2>
-        {this.state.itemList.map(item => (
-          <Grid container justify='center'>
-            {/* <ButtonBase> */}
-              <Grid xs={7} item>
-                <Card key={item.workId} className={classes.workCard} variant='outlined' onClick={ () => this.goToDescriptionPage(item.workId)}>
-                  <CardContent>
-                    <Typography variant='h6'>{item.title}</Typography>
-                    {/* <div>{item.description}</div> */}
-                    <Grid container>
-                      <Grid xs={3} item>
-                        <Typography variant='body2' color='textSecondary'>投稿者：{item.userName}</Typography>
-                      </Grid>
-                      <Grid xs={3} item>
-                        <Typography variant='body2' color='textSecondary'>投稿日時：{item.postedAt}</Typography>
-                      </Grid>
+        <Grid container justify='center'>
+          <Grid item sm={9}>
+            <Box mt={5}></Box>
+            <Card variant='outlined'>
+              <CardContent>
+                <Grid container>
+                  <Grid item sm={12}>
+                    <Typography variant='h6'>みんなの作品一覧</Typography>
+                  </Grid>
+                </Grid>
+                <Box mt={3}></Box>
+                {this.state.itemList.map(item => (
+                  <Grid container justify='center'>
+                    <Grid xs={12} item>
+                      <Card key={item.workId} className={classes.workCard} variant='outlined' onClick={() => this.goToDescriptionPage(item.workId, item.userId)}>
+                        <CardContent>
+                          <Grid container>
+                            <Grid sm={2} item>
+                              <img src={`${PATHS.ICONS_FOLDER_URL}/${item.userIconImg}`} className={classes.userIcon} width='80' height='80'/>
+                            </Grid>
+                            <Grid sm={10} item>
+                              <Typography variant='h6'>{item.title}</Typography>
+                              <Typography variant='body2' color='textSecondary'>投稿者：{item.userName}</Typography>
+                              <Typography variant='body2' color='textSecondary'>投稿日時：{item.postedAt}</Typography>
+                            </Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                      <Box mb={1}></Box>
                     </Grid>
-                  </CardContent>
-                </Card>
-                <Box mb={1}></Box>
-              </Grid>
-            {/* </ButtonBase> */}
+                  </Grid>
+                ))}
+              </CardContent>
+            </Card>
           </Grid>
-        ))}
+        </Grid>
       </Container>
     )
   }
