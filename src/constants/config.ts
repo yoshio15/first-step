@@ -11,7 +11,8 @@ export const PATHS = {
     NEW_USER_PATH: '/post-user',
     UPDATE_USER_PATH: '/update-user'
   },
-  BASE_URL: 'https://dev-first-step-works.s3-ap-northeast-1.amazonaws.com'
+  BASE_URL: 'https://dev-first-step-works.s3-ap-northeast-1.amazonaws.com',
+  ICONS_FOLDER_URL: 'http://d3gb33njhqlz7c.cloudfront.net/icons'
 }
 
 export const API_GATEWAY = {
