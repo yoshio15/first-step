@@ -10,6 +10,7 @@ import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/wit
 import createStyles from "@material-ui/core/styles/createStyles";
 import Create from '@material-ui/icons/Create';
 import PostDialog from '../parts/PostDialog'
+import Store from '../../store/index'
 import { PATHS, API_GATEWAY } from '../../constants/config'
 
 const styles = (theme: Theme): StyleRules => createStyles({
@@ -36,7 +37,7 @@ const styles = (theme: Theme): StyleRules => createStyles({
 
 interface Props extends WithStyles<typeof styles> {
   history: H.History
- }
+}
 interface State {
   workId: string,
   title: string,
@@ -72,11 +73,18 @@ class PostWork extends React.Component<Props, State> {
   }
   private handleTitleInput = (e: any) => { this.setState({ title: e.target.value }) }
   private handleDescriptionInput = (e: any) => { this.setState({ description: e.target.value }) }
-  private generateReqest = (workId: string) => {
+  private generateRequest = async (workId: string) => {
+    const userIconImg = await this.getUserIconImg()
+    console.log('①USER_ICON_IMG' + userIconImg)
     return {
-      workId,
-      title: this.state.title,
-      description: this.state.description
+      body: {
+        workId,
+        userIconImg,
+        userId: Store.getState().store.id,
+        userName: Store.getState().store.user,
+        title: this.state.title,
+        description: this.state.description,
+      }
     }
   }
   private getUniqueId = () => {
@@ -85,40 +93,77 @@ class PostWork extends React.Component<Props, State> {
   private openDialog = () => this.setState({ isOpen: true })
   private postWork = async () => {
     const workId = this.getUniqueId()
+    const request = await this.generateRequest(workId)
+    console.log('②REQUEST: ' + JSON.stringify(request))
     this.setState({ workId })
-    console.log(JSON.stringify(this.state))
-    const request = {
-      body: this.generateReqest(workId)
-    }
-    console.log('Request: ' + JSON.stringify(request))
-    // DynamoDBへのメタ情報の登録
-    API.post(API_GATEWAY.NAME, PATHS.POST.NEW_WORK_PATH, request)
-      .then(response => {
-        console.log(response)
-      }).catch(error => {
-        console.log(error)
-      })
-    // S3の署名つきURLを取得
-    const option = {}
-    const path = `${PATHS.GET.S3_PRESIGNED_URL_PATH}/${workId}`
-    console.log('PATH: ' + path)
-    const url = await API.get(
-      API_GATEWAY.NAME,
-      path,
-      option
-    )
-    console.log('URL: ' + url)
-    // S3への実ファイルのアップロード（キー情報はWorkId）
-    const file = this.state.file
-    console.log(file)
-    axios
-      .put(url, file, { headers: { 'Content-Type': 'text/html' } })
-      .then(res => {
-        console.log(res)
-        this.setState({ isOpen: false })
-        this.props.history.push('works-list')
-      })
-      .catch(err => { console.log(err) })
+    this.setState({ isOpen: false })
+    Promise.all([
+      this.postMetaInfoToDynamo(request),
+      this.getPrisignedUrlForUploadToS3(workId).then((url) => this.uploadFileToS3(url))
+    ]).then(_res => {
+      this.setState({ isOpen: false })
+      this.props.history.push('works-list')
+    }).catch(err => {
+      console.log(err)
+      this.setState({ isOpen: false })
+    })
+  }
+  private uploadFileToS3 = (url: string) => {
+    return new Promise((resolve, reject) => {
+      const file = this.state.file
+      console.log(file)
+      axios
+        .put(url, file, { headers: { 'Content-Type': 'text/html' } })
+        .then(res => {
+          console.log(res)
+          resolve()
+        })
+        .catch(err => {
+          console.log(err)
+          reject()
+        })
+
+    })
+  }
+  private getPrisignedUrlForUploadToS3 = (workId: string) => {
+    return new Promise<string>((resolve, reject) => {
+      const option = {}
+      const path = `${PATHS.GET.S3_PRESIGNED_URL_PATH}/${workId}`
+      console.log('PATH: ' + path)
+      API.get(API_GATEWAY.NAME, path, option)
+        .then(res => {
+          resolve(res)
+        }).catch(err => {
+          reject(err)
+        })
+    })
+  }
+  private postMetaInfoToDynamo = (request: any) => {
+    return new Promise((resolve, reject) => {
+      API.post(API_GATEWAY.NAME, PATHS.POST.NEW_WORK_PATH, request)
+        .then(response => {
+          console.log(response)
+          resolve(response)
+        }).catch(error => {
+          console.log(error)
+          reject(error)
+        })
+    })
+  }
+  private getUserIconImg = () => {
+    return new Promise((resolve, reject) => {
+      const option = {}
+      const path = `${PATHS.GET.USER_ICOM_IMG_PATH}/${Store.getState().store.id}`
+      console.log(`GetUserIconImg Path: ${path}`)
+      API.get(API_GATEWAY.NAME, path, option)
+        .then(res => {
+          console.log(res)
+          resolve(res.user_icon_img)
+        }).catch(err => {
+          console.log(err)
+          reject(err)
+        })
+    })
   }
   componentDidMount() {
     console.log(this.getUniqueId())

@@ -52,6 +52,7 @@ class Login extends React.Component<Props, State> {
   signUp() {
     let username = this.state.username
     let password = this.state.password
+    const email = 'FirstStepDevelop@gmail.com'
     this.setState({ isShownProgress: true })
     console.log(username, password)
     if (password !== this.state.passwordConfirmation) {
@@ -59,11 +60,19 @@ class Login extends React.Component<Props, State> {
       alert('パスワードが一致しませんでした。')
       return
     }
-    Auth.signUp(username, password)
+    Auth.signUp({
+      username,
+      password,
+      attributes: { email }
+    })
       .then((res) => {
         console.log(res)
+        console.log(res.userSub) // userSubをユーザIDとして設定する
         const request = {
-          body: { username }
+          body: {
+            username,
+            userId: res.userSub
+          }
         }
         API.post(API_GATEWAY.NAME, PATHS.POST.NEW_USER_PATH, request)
           .then(response => {

@@ -27,7 +27,11 @@ const useStyle = makeStyles(theme => ({
 )
 
 const logout = () => {
-  Store.dispatch(Actions.updateUser(''))
+  const emptyUserInfo = {
+    id: '',
+    user: ''
+  }
+  Store.dispatch(Actions.updateUser(emptyUserInfo))
 }
 
 const AppHeader: React.FC = () => {

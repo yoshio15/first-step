@@ -53,7 +53,12 @@ class Login extends React.Component<Props, State> {
     Auth.signIn(username, password)
       .then((res) => {
         console.log(res)
-        Store.dispatch(Actions.updateUser(res.username))
+        const userId = res.attributes.sub
+        const loginUserInfo = {
+          id: userId,
+          user: res.username
+        }
+        Store.dispatch(Actions.updateUser(loginUserInfo))
         this.setState({isShownProgress: false})
         this.props.history.push('works-list')
       })
@@ -67,6 +72,7 @@ class Login extends React.Component<Props, State> {
   render() {
     const { classes } = this.props
     console.log(Store)
+    console.log(`Login Props: ${JSON.stringify(this.props)}`)
     return (
       <Container className={classes.container}>
         <Paper className={classes.paper} variant='outlined'>
