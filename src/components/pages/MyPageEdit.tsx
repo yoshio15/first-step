@@ -23,6 +23,7 @@ interface IState {
   userId: string,
   userName: string,
   userSummary: string,
+  userIconImg: string,
   postedWorkIdList: string[],
   userIconUrl: string,
   defaultUserIconUrl: string,
@@ -38,6 +39,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
     userId: '',
     userName: '',
     userSummary: '',
+    userIconImg: '',
     postedWorkIdList: [],
     userIconUrl: '',
     defaultUserIconUrl: '',
@@ -84,42 +86,71 @@ class MyPageEdit extends React.Component<IProps, IState> {
   private handleUserSummaryInput = (e: any) => { this.setState({ userSummary: e.target.value }) }
   private goBackToMyPage = () => { this.props.history.push(`/mypage/${this.state.userId}`) }
   private updateUserProfile = async () => {
-    const request = {
+    // ユーザ情報の更新
+    await this.updateUserInfoToDynamo()
+    // アイコンファイルに変更がある場合
+    if (this.state.file) {
+      const url = await this.getPresignedUrl()
+      console.log(`URL: ${url}`)
+      await this.uploadFileToS3(url)
+    }
+    this.goBackToMyPage()
+  }
+  private getPresignedUrl = () => {
+    return new Promise<string>((resolve, reject) => {
+      const path = `${PATHS.GET.S3_PRESIGNED_URL_FOR_USER_ICON_PATH}/${this.state.userId}/${this.state.fileType}`
+      const option = {}
+      console.log(`PATH: ${path}`)
+      API.get(API_GATEWAY.NAME, path, option)
+        .then(res => {
+          console.log(res)
+          resolve(res)
+        }).catch(err => {
+          console.log(err)
+          reject(err)
+        })
+    })
+  }
+  private generateRequest = () => {
+    return {
       body: {
         userId: this.state.userId,
         userName: this.state.userName,
-        userSummary: this.state.userSummary
+        userSummary: this.state.userSummary,
+        userIconImg: this.state.userIconImg
       }
     }
-    API.post(API_GATEWAY.NAME, PATHS.POST.UPDATE_USER_PATH, request)
-      .then(async res => {
-        console.log(res)
-        if (this.state.file) {
-          const path = `${PATHS.GET.S3_PRESIGNED_URL_FOR_USER_ICON_PATH}/${this.state.userId}/${this.state.fileType}`
-          const option = {}
-          console.log(`PATH: ${path}`)
-          const url = await API.get(
-            API_GATEWAY.NAME,
-            path,
-            option
-          )
-          console.log(`URL: ${url}`)
-          console.log(`FILE_TYPE: ${this.state.fileType}`)
-          const file = this.state.file
-          axios
-            .put(url, file, { headers: { 'Content-Type': this.state.fileType } })
-            .then(res => {
-              console.log(res)
-              this.goBackToMyPage()
-            })
-            .catch(err => { console.log(err) })
-        } else {
-          this.goBackToMyPage()
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
+  }
+  private updateUserInfoToDynamo = () => {
+    return new Promise((resolve, reject) => {
+      const request = this.generateRequest()
+      console.log(`REQUEST: ${JSON.stringify(request)}`)
+      API.post(API_GATEWAY.NAME, PATHS.POST.UPDATE_USER_PATH, request)
+        .then(async res => {
+          console.log(res)
+          resolve()
+        })
+        .catch(err => {
+          console.log(err)
+          reject()
+        })
+    })
+  }
+  private uploadFileToS3 = (url: string) => {
+    return new Promise((resolve, reject) => {
+      const file = this.state.file
+      console.log(`FILE_TYPE: ${this.state.fileType}`)
+      axios
+        .put(url, file, { headers: { 'Content-Type': this.state.fileType } })
+        .then(res => {
+          console.log(res)
+          resolve()
+        })
+        .catch(err => {
+          console.log(err)
+          reject()
+        })
+    })
   }
   private fileHandler = (e: any) => {
     e.persist()
@@ -127,10 +158,12 @@ class MyPageEdit extends React.Component<IProps, IState> {
     const file = e.target.files[0]
     const createObjectURL = (window.URL || window.webkitURL).createObjectURL
     const iconUrl = createObjectURL(file)
+    const userIconFileName = this.state.userId + '.' + file.name.split('.').pop()
     this.setState({
       userIconUrl: iconUrl,
       file: file,
-      fileType: file.type
+      fileType: file.type,
+      userIconImg: userIconFileName
     })
   }
   private clickFileUploadBtn = () => {
