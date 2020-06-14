@@ -108,7 +108,7 @@ class WorksList extends React.Component<PropsI, StateI> {
                         <CardContent>
                           <Grid container>
                             <Grid sm={2} item>
-                              <img src={`${PATHS.ICONS_FOLDER_URL}/${item.userIconImg}`} className={classes.userIcon} width='80' height='80'/>
+                              <img src={`${PATHS.ICONS_FOLDER_URL}/${item.userId}`} className={classes.userIcon} width='80' height='80'/>
                             </Grid>
                             <Grid sm={10} item>
                               <Typography variant='h6'>{item.title}</Typography>
