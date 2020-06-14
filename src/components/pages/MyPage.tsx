@@ -70,12 +70,11 @@ class MyPage extends React.Component<IProps, IState> {
         console.log(err)
       })
   }
-
   private goToEditPage = () => {
     this.props.history.push(`/mypage/edit/${this.state.userId}`)
   }
-  private goToDescriptionPage = (workId: string) => {
-    this.props.history.push(`/work-description/${workId}`)
+  private goToDescriptionPage = (workId: string, userId: string) => {
+    this.props.history.push(`/work-description/${workId}/${userId}`)
   }
   render() {
     return (
@@ -93,7 +92,7 @@ class MyPage extends React.Component<IProps, IState> {
                 <Box mt={3}></Box>
                 <Grid container>
                   <Grid item sm={3}>
-                    <img src={this.state.userIconUrl} width='104' height='104'/>
+                    <img src={this.state.userIconUrl} width='104' height='104' />
                     <Typography>{this.state.userName}</Typography>
                     <Button
                       color='inherit'
@@ -108,7 +107,11 @@ class MyPage extends React.Component<IProps, IState> {
                 <Box mt={5}></Box>
                 {this.state.usersWorksList.map(item => (
                   <Container>
-                    <Card key={item.work_id} variant='outlined' onClick={() => this.goToDescriptionPage(item.work_id)}>
+                    <Card
+                      key={item.work_id}
+                      variant='outlined'
+                      onClick={() => this.goToDescriptionPage(item.work_id, item.user_id)}
+                    >
                       <CardContent>
                         <Typography variant='h6'>{item.title}</Typography>
                         <Grid container>

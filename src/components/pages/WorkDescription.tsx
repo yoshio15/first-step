@@ -97,7 +97,7 @@ class WorkDescription extends React.Component<IProps, IState> {
                 <Button
                   color='primary'
                   component={Link}
-                  to='../works-list'
+                  to='../../works-list'
                   variant='outlined'
                 >作品一覧に戻る</Button>
                 <Button
