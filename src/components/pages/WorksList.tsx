@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import * as H from 'history'
 import { Container, Grid, Box, Typography, Card, CardContent, ButtonBase, createStyles } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
@@ -108,11 +109,14 @@ class WorksList extends React.Component<PropsI, StateI> {
                         <CardContent>
                           <Grid container>
                             <Grid sm={2} item>
-                              <img src={`${PATHS.ICONS_FOLDER_URL}/${item.userId}`} className={classes.userIcon} width='80' height='80'/>
+                              <img src={`${PATHS.ICONS_FOLDER_URL}/${item.userId}`} className={classes.userIcon} width='80' height='80' />
                             </Grid>
                             <Grid sm={10} item>
                               <Typography variant='h6'>{item.title}</Typography>
-                              <Typography variant='body2' color='textSecondary'>投稿者：{item.userName}</Typography>
+                              {/* Todo: ユーザプロフィールページへのリンクが効かない問題 */}
+                              <Link to={`/mypage/${item.userId}`}>
+                                <Typography variant='body2' color='textSecondary'>投稿者：{item.userName}</Typography>
+                              </Link>
                               <Typography variant='body2' color='textSecondary'>投稿日時：{item.postedAt}</Typography>
                             </Grid>
                           </Grid>
