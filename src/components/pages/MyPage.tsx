@@ -119,7 +119,10 @@ class MyPage extends React.Component<IProps, IState> {
                             <Typography variant='body2' color='textSecondary'>投稿者：{item.user_name}</Typography>
                           </Grid>
                           <Grid xs={6} item>
-                            <Typography variant='body2' color='textSecondary'>投稿日時：{item.posted_at}</Typography>
+                            <Typography
+                              variant='body2'
+                              color='textSecondary'
+                            >投稿日時：{new Date(item.posted_at * 1000).toLocaleDateString()}</Typography>
                           </Grid>
                         </Grid>
                       </CardContent>
