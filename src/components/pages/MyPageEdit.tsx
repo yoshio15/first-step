@@ -117,7 +117,8 @@ class MyPageEdit extends React.Component<IProps, IState> {
         userId: this.state.userId,
         userName: this.state.userName,
         userSummary: this.state.userSummary,
-        userIconImg: this.state.userIconImg
+        userIconImg: this.state.userIconImg,
+        postedWorkIdList: this.state.postedWorkIdList
       }
     }
   }
