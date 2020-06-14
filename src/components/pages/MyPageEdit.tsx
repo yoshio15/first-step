@@ -1,7 +1,7 @@
 import React from 'react'
 import * as H from 'history'
 import axios from 'axios'
-import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography } from '@material-ui/core'
+import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, CircularProgress, LinearProgress, Fade } from '@material-ui/core'
 import { API } from 'aws-amplify'
 import { PATHS, API_GATEWAY } from '../../constants/config'
 
@@ -29,7 +29,8 @@ interface IState {
   defaultUserIconUrl: string,
   file: File | undefined,
   fileType: string,
-  usersWorksList: IWorkEntity[]
+  usersWorksList: IWorkEntity[],
+  loading: boolean,
 }
 class MyPageEdit extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -45,7 +46,8 @@ class MyPageEdit extends React.Component<IProps, IState> {
     defaultUserIconUrl: '',
     file: undefined,
     fileType: '',
-    usersWorksList: []
+    usersWorksList: [],
+    loading: false,
   }
   componentDidMount() {
     this.getUser()
@@ -55,6 +57,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
     const path = `${PATHS.GET.USER_PATH}/${userId}`
     console.log('USER_ID: ' + userId)
     console.log('PATH: ' + path)
+    this.setState({ loading: true })
     await API.get(API_GATEWAY.NAME, path, {})
       .then(res => {
         console.log(res)
@@ -75,7 +78,8 @@ class MyPageEdit extends React.Component<IProps, IState> {
         console.log(url)
         this.setState({
           userIconUrl: url,
-          defaultUserIconUrl: url
+          defaultUserIconUrl: url,
+          loading: false
         })
       })
       .catch(err => {
@@ -178,6 +182,9 @@ class MyPageEdit extends React.Component<IProps, IState> {
           <Grid item sm={9}>
             <Box mt={5}></Box>
             <Card variant='outlined'>
+              <Fade in={this.state.loading} unmountOnExit>
+                <LinearProgress />
+              </Fade>
               <CardContent>
                 <Grid container justify='center'>
                   <Grid item>
@@ -192,6 +199,13 @@ class MyPageEdit extends React.Component<IProps, IState> {
                   </Grid>
                 </Grid>
                 <Box mt={3}></Box>
+                <Fade in={this.state.loading} unmountOnExit>
+                  <Grid container justify='center'>
+                    <Grid xs={1} item>
+                      <CircularProgress />
+                    </Grid>
+                  </Grid>
+                </Fade>
                 <Grid container>
                   <Grid item sm={2}>
                     <img

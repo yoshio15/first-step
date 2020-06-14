@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { API } from 'aws-amplify'
-import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography } from '@material-ui/core'
+import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, CircularProgress, LinearProgress, Fade } from '@material-ui/core'
 import { PATHS, API_GATEWAY } from '../../constants/config'
 
 // DBから取得するリストのインターフェース
@@ -27,7 +27,8 @@ interface IState {
   description: string,
   userId: string,
   userName: string,
-  postedAt: string
+  postedAt: string,
+  loading: boolean,
 }
 class WorkDescription extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -39,18 +40,20 @@ class WorkDescription extends React.Component<IProps, IState> {
     description: '',
     userId: '',
     userName: '',
-    postedAt: ''
+    postedAt: '',
+    loading: false,
   }
   componentDidMount() {
     this.getWork()
   }
   async getWork() {
     console.log('getWork')
-    console.log('WORK_ID: '+this.props.match.params.work_id)
-    console.log('USER_ID: '+this.props.match.params.user_id)
+    console.log('WORK_ID: ' + this.props.match.params.work_id)
+    console.log('USER_ID: ' + this.props.match.params.user_id)
     const workId = this.props.match.params.work_id
     const userId = this.props.match.params.user_id
     const path = `${PATHS.GET.WORK_PATH}/${workId}/${userId}`
+    this.setState({ loading: true })
     await API.get(API_GATEWAY.NAME, path, {})
       .then(res => {
         console.log(res)
@@ -60,7 +63,8 @@ class WorkDescription extends React.Component<IProps, IState> {
           description: res.description,
           userId: res.user_id,
           userName: res.user_name,
-          postedAt: (new Date(res.posted_at * 1000)).toLocaleDateString()
+          postedAt: (new Date(res.posted_at * 1000)).toLocaleDateString(),
+          loading: false
         })
       }).catch(err => {
         console.log(err)
@@ -75,7 +79,17 @@ class WorkDescription extends React.Component<IProps, IState> {
           <Grid item sm={7}>
             <Box mt={5}></Box>
             <Card variant='outlined'>
+              <Fade in={this.state.loading} unmountOnExit>
+                <LinearProgress />
+              </Fade>
               <CardContent>
+                <Fade in={this.state.loading} unmountOnExit>
+                  <Grid container justify='center'>
+                    <Grid xs={1} item>
+                      <CircularProgress />
+                    </Grid>
+                  </Grid>
+                </Fade>
                 <Grid container>
                   <Grid item sm={2}>
                     <Link to={`/mypage/${this.state.userId}`}>

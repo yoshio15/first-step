@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import * as H from 'history'
-import { Container, Grid, Box, Typography, Card, CardContent, ButtonBase, createStyles } from '@material-ui/core'
+import { Container, Grid, Box, Typography, Card, CardContent, ButtonBase, createStyles, CircularProgress, LinearProgress, Fade } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import { API } from 'aws-amplify'
 import Store from '../../store/index'
@@ -13,7 +13,6 @@ const styles = (): StyleRules => createStyles({
   },
   userIcon: {
     borderRadius: '50%',
-    // border: '2px solid #000'
   }
 })
 // Stateとして保持するリストのインターフェース
@@ -37,6 +36,7 @@ interface ResponseI {
   posted_at: number
 }
 interface StateI {
+  loading: boolean,
   itemList: ResponseListI[]
 }
 interface PropsI extends WithStyles<typeof styles> {
@@ -47,6 +47,7 @@ class WorksList extends React.Component<PropsI, StateI> {
     super(props)
   }
   state: StateI = {
+    loading: false,
     itemList: []
   }
   componentDidMount() {
@@ -57,6 +58,7 @@ class WorksList extends React.Component<PropsI, StateI> {
     const path = PATHS.GET.WORKS_LIST_PATH;
     const option = {}
     let responseList!: ResponseListI[];
+    this.setState({ loading: true })
     await API.get(apiName, path, option)
       .then(response => {
         console.log(response)
@@ -65,7 +67,10 @@ class WorksList extends React.Component<PropsI, StateI> {
       }).catch(error => {
         console.log(error)
       });
-    this.setState({ itemList: responseList })
+    this.setState({
+      itemList: responseList,
+      loading: false
+    })
   }
   formatResponse(res: any): ResponseListI[] {
     return res.map((item: ResponseI) => {
@@ -95,15 +100,20 @@ class WorksList extends React.Component<PropsI, StateI> {
           <Grid item sm={9}>
             <Box mt={5}></Box>
             <Card variant='outlined'>
+              <Fade in={this.state.loading} unmountOnExit>
+                <LinearProgress />
+              </Fade>
               <CardContent>
-                <Grid container>
-                  <Grid item sm={12}>
-                    <Typography variant='h6'>みんなの作品一覧</Typography>
-                  </Grid>
-                </Grid>
                 <Box mt={3}></Box>
-                {this.state.itemList.map(item => (
+                <Fade in={this.state.loading} unmountOnExit>
                   <Grid container justify='center'>
+                    <Grid xs={1} item>
+                      <CircularProgress />
+                    </Grid>
+                  </Grid>
+                </Fade>
+                {this.state.itemList.map(item => (
+                  <Grid justify='center'>
                     <Grid xs={12} item>
                       <Card key={item.workId} className={classes.workCard} variant='outlined' onClick={() => this.goToDescriptionPage(item.workId, item.userId)}>
                         <CardContent>
