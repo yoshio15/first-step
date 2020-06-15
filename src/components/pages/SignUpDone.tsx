@@ -1,6 +1,7 @@
 import React from 'react'
 import * as H from 'history'
 import { Container, Paper, Grid, Typography, Button, Box } from '@material-ui/core'
+import Store from '../../store/index'
 
 interface Props {
   history: H.History
@@ -25,7 +26,7 @@ const SignUpDone: React.FC<Props> = (props) => {
               <Grid item>
                 <Box mt={5}></Box>
                 <Typography variant='h6'>
-                  ご登録いただいた「xxxxx@yyyy.zzz」宛に登録確認用のご案内をお送りしましたので、
+                  ご登録いただいた「{Store.getState().store.email}」宛に登録確認用のご案内をお送りしましたので、
                 </Typography>
               </Grid>
             </Grid>
@@ -43,7 +44,7 @@ const SignUpDone: React.FC<Props> = (props) => {
                   color='primary'
                   variant='contained'
                   onClick={() => props.history.push('/login')}
-                >ログイン画面へ >></Button>
+                >ログイン画面へ</Button>
                 <Box mb={3}></Box>
               </Grid>
             </Grid>

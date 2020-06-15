@@ -6,6 +6,8 @@ import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/wit
 import createStyles from "@material-ui/core/styles/createStyles";
 import { Auth } from 'aws-amplify'
 import { PATHS, API_GATEWAY } from '../../constants/config'
+import Store from '../../store/index'
+import Actions from '../../store/action'
 
 const styles = (): StyleRules => createStyles({
   container: {
@@ -16,7 +18,7 @@ const styles = (): StyleRules => createStyles({
   },
   paper: {
     width: '70%',
-    height: '440px'
+    height: '520px'
   },
   grid: {
     height: '600px'
@@ -29,8 +31,9 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   username: string,
   password: string,
-  passwordConfirmation: string
-  isShownProgress: boolean
+  passwordConfirmation: string,
+  isShownProgress: boolean,
+  email: string
 }
 
 class Login extends React.Component<Props, State> {
@@ -40,19 +43,21 @@ class Login extends React.Component<Props, State> {
       username: '',
       password: '',
       passwordConfirmation: '',
-      isShownProgress: false
+      isShownProgress: false,
+      email: ''
     }
     this.handleChangeUsername = this.handleChangeUsername.bind(this)
     this.handleChangePassword = this.handleChangePassword.bind(this)
+    this.handleChangeEmail = this.handleChangeEmail.bind(this)
     this.handleChangePasswordConfirmation = this.handleChangePasswordConfirmation.bind(this)
     this.signUp = this.signUp.bind(this)
     this.isSamePassword = this.isSamePassword.bind(this)
   }
 
   signUp() {
-    let username = this.state.username
-    let password = this.state.password
-    const email = 'FirstStepDevelop@gmail.com'
+    const username = this.state.username
+    const password = this.state.password
+    const email = this.state.email
     this.setState({ isShownProgress: true })
     console.log(username, password)
     if (password !== this.state.passwordConfirmation) {
@@ -74,6 +79,7 @@ class Login extends React.Component<Props, State> {
             userId: res.userSub
           }
         }
+        Store.dispatch(Actions.setEmail(email)) // EmailをStoreにセットする
         API.post(API_GATEWAY.NAME, PATHS.POST.NEW_USER_PATH, request)
           .then(response => {
             console.log(response)
@@ -93,6 +99,8 @@ class Login extends React.Component<Props, State> {
   handleChangeUsername(e: any) { this.setState({ username: e.target.value }) }
 
   handleChangePassword(e: any) { this.setState({ password: e.target.value }) }
+
+  handleChangeEmail(e: any) { this.setState({ email: e.target.value }) }
 
   handleChangePasswordConfirmation(e: any) { this.setState({ passwordConfirmation: e.target.value }) }
 
@@ -124,6 +132,16 @@ class Login extends React.Component<Props, State> {
               <TextField
                 variant='outlined'
                 margin='normal'
+                label='メースアドレス'
+                type='normal'
+                value={this.state.email}
+                onChange={this.handleChangeEmail}
+                required
+                fullWidth
+              ></TextField>
+              <TextField
+                variant='outlined'
+                margin='normal'
                 label='パスワード'
                 type='password'
                 value={this.state.password}
@@ -142,7 +160,7 @@ class Login extends React.Component<Props, State> {
                 fullWidth
               ></TextField>
               <Box mt={5}></Box>
-              <Button variant='contained' color='primary' onClick={this.signUp} fullWidth>無料会員登録 >></Button>
+              <Button variant='contained' color='primary' onClick={this.signUp} fullWidth>無料会員登録</Button>
             </Grid>
           </Grid>
         </Paper>

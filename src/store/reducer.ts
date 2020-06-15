@@ -3,12 +3,14 @@ import actions from './action';
 
 export interface State {
   id: string,
-  user: string
+  user: string,
+  email: string
 }
 
 const initialState: State = {
   id: '',
-  user: ''
+  user: '',
+  email: ''
 };
 
 export const reducer = reducerWithInitialState(initialState)
@@ -16,5 +18,10 @@ export const reducer = reducerWithInitialState(initialState)
     return Object.assign({}, state, {
       id: userInfo.id,
       user: userInfo.user
+    });
+  })
+  .case(actions.setEmail, (state, email) => {
+    return Object.assign({}, state, {
+      email: email
     });
   })
