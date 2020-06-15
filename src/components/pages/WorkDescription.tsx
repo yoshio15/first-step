@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { API } from 'aws-amplify'
-import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, CircularProgress, LinearProgress, Fade } from '@material-ui/core'
+import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, CircularProgress, LinearProgress, Fade, createStyles } from '@material-ui/core'
+import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import { PATHS, API_GATEWAY } from '../../constants/config'
 
 // DBから取得するリストのインターフェース
@@ -13,7 +14,7 @@ interface IResponse {
   user_name: string,
   posted_at: number
 }
-interface IProps {
+interface IProps extends WithStyles<typeof styles> {
   match: {
     params: {
       work_id: string,
@@ -30,6 +31,11 @@ interface IState {
   postedAt: string,
   loading: boolean,
 }
+const styles = (): StyleRules => createStyles({
+  description: {
+    whiteSpace: 'pre-wrap'
+  }
+})
 class WorkDescription extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
@@ -73,6 +79,7 @@ class WorkDescription extends React.Component<IProps, IState> {
   private goToWorkPage = () => { window.open(`${PATHS.BASE_URL}/${this.state.workId}`, '_blank') }
   render() {
     console.log(this.state)
+    const { classes } = this.props
     return (
       <Container>
         <Grid container justify='center'>
@@ -105,7 +112,7 @@ class WorkDescription extends React.Component<IProps, IState> {
                 <Box mt={3}></Box>
                 <Typography color='textPrimary' variant='h5'>{this.state.title}</Typography>
                 <Box mt={3}></Box>
-                <Typography>{this.state.description}</Typography>
+                <Typography className={classes.description}>{this.state.description}</Typography>
               </CardContent>
               <CardActions>
                 <Button
@@ -118,7 +125,7 @@ class WorkDescription extends React.Component<IProps, IState> {
                   color='primary'
                   variant='contained'
                   onClick={() => this.goToWorkPage()}
-                >作品を見る >></Button>
+                >作品を見る</Button>
               </CardActions>
             </Card>
           </Grid>
@@ -128,4 +135,4 @@ class WorkDescription extends React.Component<IProps, IState> {
   }
 }
 
-export default WorkDescription
+export default withStyles(styles)(WorkDescription)
