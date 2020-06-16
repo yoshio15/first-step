@@ -4,7 +4,7 @@ import { API } from 'aws-amplify'
 import axios from 'axios'
 import * as H from 'history'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { Container, Paper, Grid, TextField, Button, Box } from '@material-ui/core'
+import { Container, Paper, Grid, TextField, Button, Box, Fade, LinearProgress, CircularProgress, Backdrop } from '@material-ui/core'
 import AttachFileIcon from '@material-ui/icons/AttachFile'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
@@ -32,7 +32,11 @@ const styles = (theme: Theme): StyleRules => createStyles({
   spacer: {
     width: '100%',
     height: '15px'
-  }
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -44,7 +48,8 @@ interface State {
   description: string,
   fileName: string,
   file: File | undefined,
-  isOpen: boolean
+  isOpen: boolean,
+  loading: boolean
 }
 
 class PostWork extends React.Component<Props, State> {
@@ -57,7 +62,8 @@ class PostWork extends React.Component<Props, State> {
     description: '',
     fileName: '',
     file: undefined,
-    isOpen: false
+    isOpen: false,
+    loading: false
   }
   private clickFileUploadBtn = () => {
     document.getElementById('file-input')!.click()
@@ -92,20 +98,20 @@ class PostWork extends React.Component<Props, State> {
   }
   private openDialog = () => this.setState({ isOpen: true })
   private postWork = async () => {
+    this.setState({ isOpen: false, loading: true }) // ダイアログを閉じてバックドロップを表示
     const workId = this.getUniqueId()
     const request = await this.generateRequest(workId)
     console.log('②REQUEST: ' + JSON.stringify(request))
     this.setState({ workId })
-    this.setState({ isOpen: false })
     Promise.all([
       this.postMetaInfoToDynamo(request),
       this.getPrisignedUrlForUploadToS3(workId).then((url) => this.uploadFileToS3(url))
     ]).then(_res => {
-      this.setState({ isOpen: false })
       this.props.history.push('works-list')
     }).catch(err => {
       console.log(err)
-      this.setState({ isOpen: false })
+    }).finally(() => {
+      this.setState({ loading: false })
     })
   }
   private uploadFileToS3 = (url: string) => {
@@ -176,6 +182,7 @@ class PostWork extends React.Component<Props, State> {
         <Grid container justify='center'>
           <Grid sm={11} item>
             <Paper>
+              <Box mt={3}></Box>
               <Grid container >
                 <Grid item sm={8}>
                   <h3 className={classes.subTitle}>自分の作品を投稿する</h3>
@@ -270,6 +277,9 @@ class PostWork extends React.Component<Props, State> {
                   </Grid>
                 </Grid>
               </Grid>
+              <Backdrop className={classes.backdrop} open={this.state.loading}>
+                <CircularProgress color='inherit' />
+              </Backdrop>
               <PostDialog
                 isOpen={this.state.isOpen}
                 handleClose={() => this.setState({ isOpen: false })}
