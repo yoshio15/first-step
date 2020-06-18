@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import * as H from 'history'
-import { Container, Grid, Box, Typography, Card, CardContent, ButtonBase, createStyles, CircularProgress, LinearProgress, Fade } from '@material-ui/core'
+import { Container, Grid, Box, Typography, Card, CardContent, Button, createStyles, CircularProgress, LinearProgress, Fade } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import { API } from 'aws-amplify'
 import Store from '../../store/index'
@@ -37,6 +37,7 @@ interface ResponseI {
 }
 interface StateI {
   loading: boolean,
+  worksToDisplay: number,
   itemList: ResponseListI[]
 }
 interface PropsI extends WithStyles<typeof styles> {
@@ -46,8 +47,11 @@ class WorksList extends React.Component<PropsI, StateI> {
   constructor(props: PropsI) {
     super(props)
   }
+  private INITIAL_WORKS_TO_DISPLAY = 5
+  private ADDITIONAL_WORKS_TO_DISPLAY = 5
   state: StateI = {
     loading: false,
+    worksToDisplay: this.INITIAL_WORKS_TO_DISPLAY,
     itemList: []
   }
   componentDidMount() {
@@ -90,6 +94,9 @@ class WorksList extends React.Component<PropsI, StateI> {
     console.log('goToDescriptionPage USER_ID: ' + userId)
     this.props.history.push(`/work-description/${workId}/${userId}`)
   }
+  countUpWorksToDisplay() {
+    this.setState({ worksToDisplay: this.state.worksToDisplay + this.ADDITIONAL_WORKS_TO_DISPLAY })
+  }
 
   render() {
     console.log(Store.getState().store)
@@ -112,7 +119,7 @@ class WorksList extends React.Component<PropsI, StateI> {
                     </Grid>
                   </Grid>
                 </Fade>
-                {this.state.itemList.map(item => (
+                {this.state.itemList.slice(0, this.state.worksToDisplay).map(item => (
                   <Grid justify='center'>
                     <Grid xs={12} item>
                       <Card key={item.workId} className={classes.workCard} variant='outlined' onClick={() => this.goToDescriptionPage(item.workId, item.userId)}>
@@ -136,6 +143,14 @@ class WorksList extends React.Component<PropsI, StateI> {
                     </Grid>
                   </Grid>
                 ))}
+                <Box mb={2}></Box>
+                {this.state.itemList.length > this.state.worksToDisplay &&
+                  <Button
+                    variant='outlined'
+                    fullWidth={true}
+                    onClick={() => this.countUpWorksToDisplay()}
+                  >もっと見る</Button>
+                }
               </CardContent>
             </Card>
           </Grid>
