@@ -19,3 +19,10 @@ export const PATHS = {
 export const API_GATEWAY = {
   NAME: 'dev-first-step'
 }
+
+export const MESSAGES = {
+  LOGIN_FAILED: 'IDまたはパスワードが違います。',
+  NETWORK_ERROR: 'ネットワークが切断されました。',
+  UNKNOWN_ERROR: '不明なエラーが発生しました。時間をおいて再度お試しください。',
+  MISSING_PARAMETERS: 'ユーザ名/パスワードは入力必須です。'
+}
