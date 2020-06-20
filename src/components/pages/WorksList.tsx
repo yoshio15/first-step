@@ -13,6 +13,10 @@ const styles = (): StyleRules => createStyles({
   },
   userIcon: {
     borderRadius: '50%',
+  },
+  userName: {
+    position: 'relative',
+    zIndex: 1
   }
 })
 // Stateとして保持するリストのインターフェース
@@ -131,7 +135,7 @@ class WorksList extends React.Component<PropsI, StateI> {
                             <Grid sm={10} item>
                               <Typography variant='h6'>{item.title}</Typography>
                               {/* Todo: ユーザプロフィールページへのリンクが効かない問題 */}
-                              <Link to={`/mypage/${item.userId}`}>
+                              <Link to={`/mypage/${item.userId}`} className={classes.userName}>
                                 <Typography variant='body2' color='textSecondary'>投稿者：{item.userName}</Typography>
                               </Link>
                               <Typography variant='body2' color='textSecondary'>投稿日時：{item.postedAt}</Typography>
