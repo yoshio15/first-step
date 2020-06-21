@@ -80,12 +80,9 @@ class PostWork extends React.Component<Props, State> {
   private handleTitleInput = (e: any) => { this.setState({ title: e.target.value }) }
   private handleDescriptionInput = (e: any) => { this.setState({ description: e.target.value }) }
   private generateRequest = async (workId: string) => {
-    const userIconImg = await this.getUserIconImg()
-    console.log('①USER_ICON_IMG' + userIconImg)
     return {
       body: {
         workId,
-        userIconImg,
         userId: Store.getState().store.id,
         userName: Store.getState().store.user,
         title: this.state.title,
@@ -101,7 +98,6 @@ class PostWork extends React.Component<Props, State> {
     this.setState({ isOpen: false, loading: true }) // ダイアログを閉じてバックドロップを表示
     const workId = this.getUniqueId()
     const request = await this.generateRequest(workId)
-    console.log('②REQUEST: ' + JSON.stringify(request))
     this.setState({ workId })
     Promise.all([
       this.postMetaInfoToDynamo(request),
@@ -153,21 +149,6 @@ class PostWork extends React.Component<Props, State> {
         }).catch(error => {
           console.log(error)
           reject(error)
-        })
-    })
-  }
-  private getUserIconImg = () => {
-    return new Promise((resolve, reject) => {
-      const option = {}
-      const path = `${PATHS.GET.USER_ICOM_IMG_PATH}/${Store.getState().store.id}`
-      console.log(`GetUserIconImg Path: ${path}`)
-      API.get(API_GATEWAY.NAME, path, option)
-        .then(res => {
-          console.log(res)
-          resolve(res.user_icon_img)
-        }).catch(err => {
-          console.log(err)
-          reject(err)
         })
     })
   }
