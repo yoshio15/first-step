@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter, Link, useHistory } from 'react-router-dom'
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -7,6 +7,7 @@ import Create from '@material-ui/icons/Create';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Store from '../store/index'
 import Actions from '../store/action'
+import HeaderImg from '../static/header.png'
 
 const useStyle = makeStyles(theme => ({
   headerStyle: {
@@ -14,7 +15,6 @@ const useStyle = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1,
-    color: '#000'
   },
   loginBtn: {
     marginRight: theme.spacing(2)
@@ -36,22 +36,27 @@ const logout = () => {
 
 const AppHeader: React.FC = () => {
   const classes = useStyle()
+  const history = useHistory()
+  const goToWorksListPage = () => history.push('/works-list')
   if (Store.getState().store.user) {
     return (
       <AppBar position='static' className={classes.headerStyle}>
         <Toolbar>
-          <Typography
-            variant='h5'
-            className={classes.title}
-          >First-Step</Typography>
+          <div className={classes.title}>
+            <img
+              src={HeaderImg}
+              alt='First-Step'
+              width='170px'
+              height='50px'
+              onClick={() => goToWorksListPage()}
+            />
+          </div>
           <Button
-            // variant='outlined'
             onClick={() => logout()}
             component={Link}
             to='/login'
           ><ExitToAppIcon color='primary' />ログアウト</Button>
           <Button
-            // variant='outlined'
             component={Link}
             to='/post-work'
           ><Create color='primary' />投稿する</Button>
@@ -62,12 +67,15 @@ const AppHeader: React.FC = () => {
     return (
       <AppBar position='static' className={classes.headerStyle}>
         <Toolbar>
-          <Typography
-            variant='h5'
-            className={classes.title}
-          // component={Link}
-          // to='/'
-          >First-Step</Typography>
+          <div className={classes.title}>
+            <img
+              src={HeaderImg}
+              alt='First-Step'
+              width='170px'
+              height='50px'
+              onClick={() => goToWorksListPage()}
+            />
+          </div>
           <LockOutlinedIcon color='primary' />
           <Button
             className={classes.loginBtn}
