@@ -22,7 +22,10 @@ export const API_GATEWAY = {
 
 export const MESSAGES = {
   LOGIN_FAILED: 'IDまたはパスワードが違います。',
+  SIGNUP_FAILED: '新規登録に失敗しました。時間をおいて再度お試しください。',
   NETWORK_ERROR: 'ネットワークが切断されました。',
   UNKNOWN_ERROR: '不明なエラーが発生しました。時間をおいて再度お試しください。',
-  MISSING_PARAMETERS: 'ユーザ名/パスワードは入力必須です。'
+  MISSING_PARAMETERS: 'ユーザ名/パスワードは入力必須です。',
+  MISSING_PARAMETERS_SIGNUP: 'ユーザ名・メールアドレス・パスワード全て入力必須です。',
+  PASSWORD_MISMATCH: 'パスワードが一致しませんでした。もう一度確認してください。',
 }

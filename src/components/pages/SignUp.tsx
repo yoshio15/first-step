@@ -1,11 +1,11 @@
 import React from 'react';
 import * as H from 'history'
 import { API } from 'aws-amplify'
-import { Container, Button, TextField, Typography, Paper, Grid, Box, LinearProgress } from '@material-ui/core';
+import { Container, Button, TextField, Typography, Paper, Grid, Box, LinearProgress, Card, CardContent, CardActions } from '@material-ui/core';
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import { Auth } from 'aws-amplify'
-import { PATHS, API_GATEWAY } from '../../constants/config'
+import { PATHS, API_GATEWAY, MESSAGES } from '../../constants/config'
 import Store from '../../store/index'
 import Actions from '../../store/action'
 
@@ -16,13 +16,6 @@ const styles = (): StyleRules => createStyles({
     alignItems: 'center',
     display: 'flex'
   },
-  paper: {
-    width: '70%',
-    height: '520px'
-  },
-  grid: {
-    height: '600px'
-  }
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -33,6 +26,8 @@ interface State {
   password: string,
   passwordConfirmation: string,
   isShownProgress: boolean,
+  isSignUpFailed: boolean,
+  errorMsg: string,
   email: string
 }
 
@@ -44,6 +39,8 @@ class Login extends React.Component<Props, State> {
       password: '',
       passwordConfirmation: '',
       isShownProgress: false,
+      isSignUpFailed: false,
+      errorMsg: '',
       email: ''
     }
     this.handleChangeUsername = this.handleChangeUsername.bind(this)
@@ -60,9 +57,20 @@ class Login extends React.Component<Props, State> {
     const email = this.state.email
     this.setState({ isShownProgress: true })
     console.log(username, password)
+    if (!username || !password || !email) {
+      this.setState({
+        isShownProgress: false,
+        isSignUpFailed: true,
+        errorMsg: MESSAGES.MISSING_PARAMETERS_SIGNUP
+      })
+      return
+    }
     if (password !== this.state.passwordConfirmation) {
-      this.setState({ isShownProgress: false })
-      alert('パスワードが一致しませんでした。')
+      this.setState({
+        isShownProgress: false,
+        isSignUpFailed: true,
+        errorMsg: MESSAGES.PASSWORD_MISMATCH
+      })
       return
     }
     Auth.signUp({
@@ -83,16 +91,27 @@ class Login extends React.Component<Props, State> {
         API.post(API_GATEWAY.NAME, PATHS.POST.NEW_USER_PATH, request)
           .then(response => {
             console.log(response)
+            this.setState({
+              isSignUpFailed: false
+            })
             this.props.history.push('/sign-up-done')
           }).catch(error => {
             console.log(error)
+            this.setState({
+              isSignUpFailed: true,
+              errorMsg: MESSAGES.SIGNUP_FAILED
+            })
           }).finally(() => {
             this.setState({ isShownProgress: false })
           })
       })
       .catch((err) => {
-        this.setState({ isShownProgress: false })
         console.log(err)
+        this.setState({
+          isShownProgress: false,
+          isSignUpFailed: true,
+          errorMsg: MESSAGES.SIGNUP_FAILED
+        })
       })
   }
 
@@ -110,60 +129,75 @@ class Login extends React.Component<Props, State> {
     const { classes } = this.props
     return (
       <Container className={classes.container}>
-        <Paper className={classes.paper} variant='outlined'>
+        <Card variant='outlined'>
           {this.state.isShownProgress && <LinearProgress />}
-          <Grid container justify='center'>
-            <Grid item xs={11}>
-              <Box mt={5}></Box>
-              <Typography component="h1" variant="h5">
-                無料会員登録
+          <CardContent>
+            <Grid container justify='center'>
+              <Grid item xs={11}>
+                <Box mt={2}></Box>
+                <Typography component="h1" variant="h5">
+                  無料会員登録
               </Typography>
-              <Box mt={2}></Box>
-              <TextField
-                variant='outlined'
-                margin='normal'
-                label='ユーザ名'
-                value={this.state.username}
-                onChange={this.handleChangeUsername}
-                autoFocus
-                required
-                fullWidth
-              ></TextField>
-              <TextField
-                variant='outlined'
-                margin='normal'
-                label='メースアドレス'
-                type='normal'
-                value={this.state.email}
-                onChange={this.handleChangeEmail}
-                required
-                fullWidth
-              ></TextField>
-              <TextField
-                variant='outlined'
-                margin='normal'
-                label='パスワード'
-                type='password'
-                value={this.state.password}
-                onChange={this.handleChangePassword}
-                required
-                fullWidth
-              ></TextField>
-              <TextField
-                variant='outlined'
-                margin='normal'
-                label='パスワード確認用'
-                type='password'
-                value={this.state.passwordConfirmation}
-                onChange={this.handleChangePasswordConfirmation}
-                required
-                fullWidth
-              ></TextField>
-              <Box mt={5}></Box>
-              <Button variant='contained' color='primary' onClick={this.signUp} fullWidth>無料会員登録</Button>
+                <Box mt={2}></Box>
+                <TextField
+                  variant='outlined'
+                  margin='normal'
+                  label='ユーザ名'
+                  value={this.state.username}
+                  onChange={this.handleChangeUsername}
+                  autoFocus
+                  required
+                  fullWidth
+                  error={this.state.isSignUpFailed}
+                ></TextField>
+                <TextField
+                  variant='outlined'
+                  margin='normal'
+                  label='メースアドレス'
+                  type='normal'
+                  value={this.state.email}
+                  onChange={this.handleChangeEmail}
+                  required
+                  fullWidth
+                  error={this.state.isSignUpFailed}
+                ></TextField>
+                <TextField
+                  variant='outlined'
+                  margin='normal'
+                  label='パスワード'
+                  type='password'
+                  value={this.state.password}
+                  onChange={this.handleChangePassword}
+                  required
+                  fullWidth
+                  error={this.state.isSignUpFailed}
+                ></TextField>
+                <TextField
+                  variant='outlined'
+                  margin='normal'
+                  label='パスワード確認用'
+                  type='password'
+                  value={this.state.passwordConfirmation}
+                  onChange={this.handleChangePasswordConfirmation}
+                  required
+                  fullWidth
+                  error={this.state.isSignUpFailed}
+                ></TextField>
+                {this.state.isSignUpFailed &&
+                  <div>
+                    <Box mt={2}></Box>
+                    <Typography color='error'>
+                      {this.state.errorMsg}
+                    </Typography>
+                  </div>
+                }
+              </Grid>
             </Grid>
-          </Grid>
-        </Paper>
+          </CardContent>
+          <CardActions>
+            <Button variant='contained' color='primary' onClick={this.signUp} fullWidth>無料会員登録</Button>
+          </CardActions>
+        </Card>
       </Container>
     )
   }
