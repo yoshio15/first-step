@@ -78,6 +78,9 @@ class Login extends React.Component<Props, State> {
           case 'NotAuthorizedException':
             this.setState({ errorMsg: MESSAGES.LOGIN_FAILED })
             break
+          case 'UserNotConfirmedException':
+            this.setState({ errorMsg: MESSAGES.NO_CONFIRMED_USER })
+            break
           default:
             this.setState({ errorMsg: MESSAGES.UNKNOWN_ERROR })
             break
