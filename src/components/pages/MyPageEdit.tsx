@@ -66,24 +66,15 @@ class MyPageEdit extends React.Component<IProps, IState> {
           userName: res.user_name,
           userSummary: res.user_summary,
           postedWorkIdList: res.posted_work_id_list,
-          usersWorksList: res.usersWorksList
-        })
-        console.log(typeof res.icon_binary)
-        const decodedIconBinary = Buffer.from(res.icon_binary, 'base64');
-        console.log(decodedIconBinary)
-        const blob = new Blob([decodedIconBinary], { type: 'application/octet-binary' })
-        console.log(blob)
-        // Blobデータから、それを表示可能なURLを生成する.
-        const url = (window.URL || window.webkitURL).createObjectURL(blob)
-        console.log(url)
-        this.setState({
-          userIconUrl: url,
-          defaultUserIconUrl: url,
-          loading: false
+          usersWorksList: res.usersWorksList,
+          userIconUrl: PATHS.ICONS_FOLDER_URL + '/' + res.user_id
         })
       })
       .catch(err => {
         console.log(err)
+      })
+      .finally(() => {
+        this.setState({ loading: false })
       })
   }
   private handleUserNameInput = (e: any) => { this.setState({ userName: e.target.value }) }
@@ -189,7 +180,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                 <Grid container justify='center'>
                   <Grid item>
                     <img
-                      src={this.state.defaultUserIconUrl}
+                      src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`}
                       width='32'
                       height='32'
                     />
