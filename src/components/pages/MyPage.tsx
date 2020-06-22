@@ -48,7 +48,7 @@ class MyPage extends React.Component<IProps, IState> {
     const path = `${PATHS.GET.USER_PATH}/${userId}`
     console.log('USER_ID: ' + userId)
     console.log('PATH: ' + path)
-    this.setState({ loading: true })
+    this.setState({ userId, loading: true })
     await API.get(API_GATEWAY.NAME, path, {})
       .then(res => {
         console.log(res)
@@ -57,23 +57,14 @@ class MyPage extends React.Component<IProps, IState> {
           userName: res.user_name,
           userSummary: res.user_summary,
           postedWorkIdList: res.posted_work_id_list,
-          usersWorksList: res.usersWorksList
-        })
-        console.log(typeof res.icon_binary)
-        const decodedIconBinary = Buffer.from(res.icon_binary, 'base64');
-        console.log(decodedIconBinary)
-        const blob = new Blob([decodedIconBinary], { type: 'application/octet-binary' })
-        console.log(blob)
-        // Blobデータから、それを表示可能なURLを生成する.
-        const url = (window.URL || window.webkitURL).createObjectURL(blob)
-        console.log(url)
-        this.setState({
-          userIconUrl: url,
-          loading: false
+          usersWorksList: res.usersWorksList,
         })
       })
       .catch(err => {
         console.log(err)
+      })
+      .finally(() => {
+        this.setState({ loading: false })
       })
   }
   private goToEditPage = () => {
@@ -108,7 +99,7 @@ class MyPage extends React.Component<IProps, IState> {
                 </Fade>
                 <Grid container>
                   <Grid item sm={3}>
-                    <img src={this.state.userIconUrl} width='104' height='104' />
+                    <img src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`} width='104' height='104' />
                     <Typography>{this.state.userName}</Typography>
                     <Button
                       color='inherit'
