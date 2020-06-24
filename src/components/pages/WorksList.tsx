@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import * as H from 'history'
 import { Container, Grid, Box, Typography, Card, CardContent, Button, createStyles, CircularProgress, LinearProgress, Fade } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
-import { API } from 'aws-amplify'
 import Store from '../../store/index'
-import { PATHS, API_GATEWAY } from '../../constants/config'
+import { PATHS } from '../../constants/config'
+import API from '../../utils/api'
 
 const styles = (): StyleRules => createStyles({
   workCard: {
@@ -62,23 +62,10 @@ class WorksList extends React.Component<PropsI, StateI> {
     this.getItemList()
   }
   async getItemList() {
-    const apiName = API_GATEWAY.NAME;
-    const path = PATHS.GET.WORKS_LIST_PATH;
-    const option = {}
-    let responseList!: ResponseListI[];
     this.setState({ loading: true })
-    await API.get(apiName, path, option)
-      .then(response => {
-        console.log(response)
-        responseList = this.formatResponse(response)
-        console.log(responseList)
-      }).catch(error => {
-        console.log(error)
-      });
-    this.setState({
-      itemList: responseList,
-      loading: false
-    })
+    const response = await API.API_GATEWAY.get(PATHS.GET.WORKS_LIST_PATH)
+    const itemList = this.formatResponse(response)
+    this.setState({ itemList, loading: false })
   }
   formatResponse(res: any): ResponseListI[] {
     return res.map((item: ResponseI) => {
@@ -94,8 +81,6 @@ class WorksList extends React.Component<PropsI, StateI> {
     })
   }
   goToDescriptionPage(workId: string, userId: string) {
-    console.log('goToDescriptionPage WORK_ID: ' + workId)
-    console.log('goToDescriptionPage USER_ID: ' + userId)
     this.props.history.push(`/work-description/${workId}/${userId}`)
   }
   countUpWorksToDisplay() {
