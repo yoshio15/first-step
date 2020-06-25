@@ -4,6 +4,7 @@ import axios from 'axios'
 import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, CircularProgress, LinearProgress, Fade } from '@material-ui/core'
 import { API } from 'aws-amplify'
 import { PATHS, API_GATEWAY } from '../../constants/config'
+import LoadingArea from '../parts/LoadingArea'
 
 interface IWorkEntity {
   work_id: string,
@@ -173,9 +174,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
           <Grid item sm={9}>
             <Box mt={5}></Box>
             <Card variant='outlined'>
-              <Fade in={this.state.loading} unmountOnExit>
-                <LinearProgress />
-              </Fade>
+              {this.state.loading && <LoadingArea />}
               <CardContent>
                 <Grid container justify='center'>
                   <Grid item>
@@ -190,13 +189,6 @@ class MyPageEdit extends React.Component<IProps, IState> {
                   </Grid>
                 </Grid>
                 <Box mt={3}></Box>
-                <Fade in={this.state.loading} unmountOnExit>
-                  <Grid container justify='center'>
-                    <Grid xs={1} item>
-                      <CircularProgress />
-                    </Grid>
-                  </Grid>
-                </Fade>
                 <Grid container>
                   <Grid item sm={2}>
                     <img

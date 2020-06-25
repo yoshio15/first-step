@@ -7,6 +7,7 @@ import Store from '../../store/index'
 import { PATHS } from '../../constants/config'
 import API from '../../utils/api'
 import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
+import LoadingArea from '../parts/LoadingArea'
 
 const styles = (): StyleRules => createStyles({
   workCard: {
@@ -97,18 +98,9 @@ class WorksList extends React.Component<PropsI, StateI> {
           <Grid item sm={9}>
             <Box mt={5}></Box>
             <Card variant='outlined'>
-              <Fade in={this.state.loading} unmountOnExit>
-                <LinearProgress />
-              </Fade>
+              {this.state.loading && <LoadingArea />}
               <CardContent>
                 <Box mt={3}></Box>
-                <Fade in={this.state.loading} unmountOnExit>
-                  <Grid container justify='center'>
-                    <Grid xs={1} item>
-                      <CircularProgress />
-                    </Grid>
-                  </Grid>
-                </Fade>
                 {this.state.itemList.slice(0, this.state.worksToDisplay).map(item => (
                   <Grid justify='center'>
                     <Grid xs={12} item>

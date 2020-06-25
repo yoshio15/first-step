@@ -5,6 +5,7 @@ import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, Card
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import { PATHS, API_GATEWAY } from '../../constants/config'
 import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
+import LoadingArea from '../parts/LoadingArea'
 
 // DBから取得するリストのインターフェース
 interface IResponse {
@@ -87,17 +88,8 @@ class WorkDescription extends React.Component<IProps, IState> {
           <Grid item sm={7}>
             <Box mt={5}></Box>
             <Card variant='outlined'>
-              <Fade in={this.state.loading} unmountOnExit>
-                <LinearProgress />
-              </Fade>
+              {this.state.loading && <LoadingArea />}
               <CardContent>
-                <Fade in={this.state.loading} unmountOnExit>
-                  <Grid container justify='center'>
-                    <Grid xs={1} item>
-                      <CircularProgress />
-                    </Grid>
-                  </Grid>
-                </Fade>
                 <Grid container>
                   <Grid item sm={2}>
                     <Link to={`/mypage/${this.state.userId}`}>
