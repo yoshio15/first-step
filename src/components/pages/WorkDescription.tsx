@@ -4,6 +4,7 @@ import { API } from 'aws-amplify'
 import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, CircularProgress, LinearProgress, Fade, createStyles } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import { PATHS, API_GATEWAY } from '../../constants/config'
+import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
 
 // DBから取得するリストのインターフェース
 interface IResponse {
@@ -69,7 +70,7 @@ class WorkDescription extends React.Component<IProps, IState> {
           description: res.description,
           userId: res.user_id,
           userName: res.user_name,
-          postedAt: (new Date(res.posted_at * 1000)).toLocaleDateString(),
+          postedAt: formatLinuxTimeToLocaleDate(res.posted_at),
           loading: false
         })
       }).catch(err => {

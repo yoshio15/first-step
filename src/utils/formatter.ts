@@ -1,0 +1,1 @@
+export　const formatLinuxTimeToLocaleDate = (linuxTime: number) => (new Date(linuxTime * 1000)).toLocaleDateString()

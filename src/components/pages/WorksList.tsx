@@ -6,6 +6,7 @@ import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/wit
 import Store from '../../store/index'
 import { PATHS } from '../../constants/config'
 import API from '../../utils/api'
+import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
 
 const styles = (): StyleRules => createStyles({
   workCard: {
@@ -76,7 +77,7 @@ class WorksList extends React.Component<PropsI, StateI> {
         userId: item.user_id,
         userName: item.user_name,
         userIconImg: item.user_icon_img,
-        postedAt: (new Date(item.posted_at * 1000)).toLocaleDateString()
+        postedAt: formatLinuxTimeToLocaleDate(item.posted_at)
       }
     })
   }
