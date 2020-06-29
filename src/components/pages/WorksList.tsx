@@ -1,26 +1,15 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import * as H from 'history'
-import { Container, Grid, Box, Typography, Card, CardContent, Button, createStyles, CircularProgress, LinearProgress, Fade } from '@material-ui/core'
+import { Container, Grid, Box, Card, CardContent, Button, createStyles } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import Store from '../../store/index'
 import { PATHS } from '../../constants/config'
 import API from '../../utils/api'
 import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
 import LoadingArea from '../parts/LoadingArea'
+import WorkCard from '../parts/WorkCard'
 
-const styles = (): StyleRules => createStyles({
-  workCard: {
-    cursor: 'pointer'
-  },
-  userIcon: {
-    borderRadius: '50%',
-  },
-  userName: {
-    position: 'relative',
-    zIndex: 1
-  }
-})
+const styles = (): StyleRules => createStyles({})
 // Stateとして保持するリストのインターフェース
 interface ResponseListI {
   workId: string,
@@ -82,16 +71,12 @@ class WorksList extends React.Component<PropsI, StateI> {
       }
     })
   }
-  goToDescriptionPage(workId: string, userId: string) {
-    this.props.history.push(`/work-description/${workId}/${userId}`)
-  }
   countUpWorksToDisplay() {
     this.setState({ worksToDisplay: this.state.worksToDisplay + this.ADDITIONAL_WORKS_TO_DISPLAY })
   }
 
   render() {
     console.log(Store.getState().store)
-    const { classes } = this.props
     return (
       <Container>
         <Grid container justify='center'>
@@ -104,23 +89,7 @@ class WorksList extends React.Component<PropsI, StateI> {
                 {this.state.itemList.slice(0, this.state.worksToDisplay).map(item => (
                   <Grid justify='center'>
                     <Grid xs={12} item>
-                      <Card key={item.workId} className={classes.workCard} variant='outlined' onClick={() => this.goToDescriptionPage(item.workId, item.userId)}>
-                        <CardContent>
-                          <Grid container>
-                            <Grid sm={2} item>
-                              <img src={`${PATHS.ICONS_FOLDER_URL}/${item.userId}`} className={classes.userIcon} width='80' height='80' />
-                            </Grid>
-                            <Grid sm={10} item>
-                              <Typography variant='h6'>{item.title}</Typography>
-                              {/* Todo: ユーザプロフィールページへのリンクが効かない問題 */}
-                              <Link to={`/mypage/${item.userId}`} className={classes.userName}>
-                                <Typography variant='body2' color='textSecondary'>投稿者：{item.userName}</Typography>
-                              </Link>
-                              <Typography variant='body2' color='textSecondary'>投稿日時：{item.postedAt}</Typography>
-                            </Grid>
-                          </Grid>
-                        </CardContent>
-                      </Card>
+                      <WorkCard item={item} />
                       <Box mb={1}></Box>
                     </Grid>
                   </Grid>
