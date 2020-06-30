@@ -5,7 +5,7 @@ import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/wit
 import Store from '../../store/index'
 import { PATHS } from '../../constants/config'
 import API from '../../utils/api'
-import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
+import { formatResponseForWorks } from '../../utils/formatter'
 import LoadingArea from '../parts/LoadingArea'
 import WorkCard from '../parts/WorkCard'
 
@@ -19,16 +19,6 @@ interface ResponseListI {
   userName: string,
   userIconImg: string,
   postedAt: string
-}
-// DBから取得するリストのインターフェース
-interface ResponseI {
-  work_id: string,
-  title: string,
-  description: string,
-  user_id: string,
-  user_name: string,
-  user_icon_img: string,
-  posted_at: number
 }
 interface StateI {
   loading: boolean,
@@ -55,21 +45,8 @@ class WorksList extends React.Component<PropsI, StateI> {
   async getItemList() {
     this.setState({ loading: true })
     const response = await API.API_GATEWAY.get(PATHS.GET.WORKS_LIST_PATH)
-    const itemList = this.formatResponse(response)
+    const itemList = formatResponseForWorks(response)
     this.setState({ itemList, loading: false })
-  }
-  formatResponse(res: any): ResponseListI[] {
-    return res.map((item: ResponseI) => {
-      return {
-        workId: item.work_id,
-        title: item.title,
-        description: item.description,
-        userId: item.user_id,
-        userName: item.user_name,
-        userIconImg: item.user_icon_img,
-        postedAt: formatLinuxTimeToLocaleDate(item.posted_at)
-      }
-    })
   }
   countUpWorksToDisplay() {
     this.setState({ worksToDisplay: this.state.worksToDisplay + this.ADDITIONAL_WORKS_TO_DISPLAY })
