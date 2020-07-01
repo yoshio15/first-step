@@ -4,7 +4,7 @@ import { Grid, Typography, Card, CardContent, createStyles } from '@material-ui/
 import { withStyles, WithStyles, StyleRules } from '@material-ui/core/styles';
 import { PATHS } from '../../constants/config'
 
-interface WorkItemI {
+export interface WorkItemI {
   workId: string;
   userId: string;
   title: string;

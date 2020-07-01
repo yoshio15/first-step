@@ -1,18 +1,12 @@
 import React from 'react'
 import * as H from 'history'
-import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, CircularProgress, LinearProgress, Fade } from '@material-ui/core'
-import { API } from 'aws-amplify'
-import { PATHS, API_GATEWAY } from '../../constants/config'
+import { Container, Grid, Button, Box, Card, CardContent, Typography } from '@material-ui/core'
+import API from '../../utils/api'
+import { PATHS } from '../../constants/config'
 import LoadingArea from '../parts/LoadingArea'
+import WorkCard, { WorkItemI } from '../parts/WorkCard'
+import { formatResponseForWorks } from '../../utils/formatter'
 
-interface IWorkEntity {
-  work_id: string,
-  title: string,
-  description: string,
-  user_id: string,
-  user_name: string,
-  posted_at: number
-}
 interface IProps {
   history: H.History,
   match: {
@@ -25,7 +19,7 @@ interface IState {
   userSummary: string,
   postedWorkIdList: string[],
   userIconUrl: string,
-  usersWorksList: IWorkEntity[],
+  usersWorksList: WorkItemI[],
   loading: boolean,
 }
 class MyPage extends React.Component<IProps, IState> {
@@ -47,32 +41,20 @@ class MyPage extends React.Component<IProps, IState> {
   async getUser() {
     const userId = this.props.match.params.id
     const path = `${PATHS.GET.USER_PATH}/${userId}`
-    console.log('USER_ID: ' + userId)
-    console.log('PATH: ' + path)
     this.setState({ userId, loading: true })
-    await API.get(API_GATEWAY.NAME, path, {})
-      .then(res => {
-        console.log(res)
-        this.setState({
-          userId: res.user_id,
-          userName: res.user_name,
-          userSummary: res.user_summary,
-          postedWorkIdList: res.posted_work_id_list,
-          usersWorksList: res.usersWorksList,
-        })
-      })
-      .catch(err => {
-        console.log(err)
-      })
-      .finally(() => {
-        this.setState({ loading: false })
-      })
+    const res = await API.API_GATEWAY.get(path)
+    console.log(res)
+    this.setState({
+      userId: res.user_id,
+      userName: res.user_name,
+      userSummary: res.user_summary,
+      postedWorkIdList: res.posted_work_id_list,
+      usersWorksList: formatResponseForWorks(res.usersWorksList),
+      loading: false
+    })
   }
   private goToEditPage = () => {
     this.props.history.push(`/mypage/edit/${this.state.userId}`)
-  }
-  private goToDescriptionPage = (workId: string, userId: string) => {
-    this.props.history.push(`/work-description/${workId}/${userId}`)
   }
   render() {
     return (
@@ -106,26 +88,7 @@ class MyPage extends React.Component<IProps, IState> {
                 <Box mt={5}></Box>
                 {this.state.usersWorksList.map(item => (
                   <Container>
-                    <Card
-                      key={item.work_id}
-                      variant='outlined'
-                      onClick={() => this.goToDescriptionPage(item.work_id, item.user_id)}
-                    >
-                      <CardContent>
-                        <Typography variant='h6'>{item.title}</Typography>
-                        <Grid container>
-                          <Grid xs={6} item>
-                            <Typography variant='body2' color='textSecondary'>投稿者：{item.user_name}</Typography>
-                          </Grid>
-                          <Grid xs={6} item>
-                            <Typography
-                              variant='body2'
-                              color='textSecondary'
-                            >投稿日時：{new Date(item.posted_at * 1000).toLocaleDateString()}</Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card>
+                    <WorkCard item={item} />
                     <Box mt={2}></Box>
                   </Container>
                 ))}
