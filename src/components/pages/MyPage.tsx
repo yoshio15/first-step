@@ -1,10 +1,11 @@
 import React from 'react'
 import * as H from 'history'
-import { Container, Grid, Button, Box, Card, CardContent, Typography } from '@material-ui/core'
+import { Container, Grid, Box, Card, CardContent, Typography } from '@material-ui/core'
 import API from '../../utils/api'
 import { PATHS } from '../../constants/config'
 import LoadingArea from '../parts/LoadingArea'
 import WorkCard, { WorkItemI } from '../parts/WorkCard'
+import EditProfileButton from '../parts/EditProfileButton'
 import { formatResponseForWorks } from '../../utils/formatter'
 
 interface IProps {
@@ -53,9 +54,6 @@ class MyPage extends React.Component<IProps, IState> {
       loading: false
     })
   }
-  private goToEditPage = () => {
-    this.props.history.push(`/mypage/edit/${this.state.userId}`)
-  }
   render() {
     return (
       <Container>
@@ -75,11 +73,7 @@ class MyPage extends React.Component<IProps, IState> {
                   <Grid item sm={3}>
                     <img src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`} width='104' height='104' />
                     <Typography>{this.state.userName}</Typography>
-                    <Button
-                      color='inherit'
-                      variant='outlined'
-                      onClick={() => this.goToEditPage()}
-                    >プロフィールを編集する</Button>
+                    <EditProfileButton userId={this.state.userId} />
                   </Grid>
                   <Grid item sm={9}>
                     <Typography>{this.state.userSummary}</Typography>
