@@ -20,7 +20,7 @@ const get = (path: string, option: Partial<GetOptionI> = {}): Promise<any> => {
 const post = (path: string, option: Partial<PostOptionI> = {}): Promise<any> => {
   return API.post(API_GATEWAY.NAME, path, option)
 }
-const put = (path: string, file: File, option: Partial<PutOptionI> = {}): Promise<any> => {
+const put = (path: string, file: File | undefined, option: Partial<PutOptionI> = {}): Promise<any> => {
   return axios.put(path, file, option)
 }
 export default { API_GATEWAY: { get, post }, S3: { put } }

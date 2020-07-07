@@ -12,3 +12,14 @@ export const formatResponseForWorks = (resList: any) => {
     }
   })
 }
+export const formatRequestForUserInfo = (item: any) => {
+  return {
+    body: {
+      userId: item.userId,
+      userName: item.userName,
+      userSummary: item.userSummary,
+      userIconImg: item.userIconImg,
+      postedWorkIdList: item.postedWorkIdList
+    }
+  }
+}

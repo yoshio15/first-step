@@ -1,9 +1,9 @@
 import React from 'react'
 import * as H from 'history'
-import axios from 'axios'
-import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, CircularProgress, LinearProgress, Fade } from '@material-ui/core'
-import { API } from 'aws-amplify'
-import { PATHS, API_GATEWAY } from '../../constants/config'
+import { Container, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography } from '@material-ui/core'
+import API from '../../utils/api'
+import { PATHS } from '../../constants/config'
+import { formatRequestForUserInfo } from '../../utils/formatter'
 import LoadingArea from '../parts/LoadingArea'
 
 interface IWorkEntity {
@@ -56,27 +56,18 @@ class MyPageEdit extends React.Component<IProps, IState> {
   async getUser() {
     const userId = this.props.match.params.id
     const path = `${PATHS.GET.USER_PATH}/${userId}`
-    console.log('USER_ID: ' + userId)
-    console.log('PATH: ' + path)
     this.setState({ loading: true })
-    await API.get(API_GATEWAY.NAME, path, {})
-      .then(res => {
-        console.log(res)
-        this.setState({
-          userId: res.user_id,
-          userName: res.user_name,
-          userSummary: res.user_summary,
-          postedWorkIdList: res.posted_work_id_list,
-          usersWorksList: res.usersWorksList,
-          userIconUrl: PATHS.ICONS_FOLDER_URL + '/' + res.user_id
-        })
-      })
-      .catch(err => {
-        console.log(err)
-      })
-      .finally(() => {
-        this.setState({ loading: false })
-      })
+    const response = await API.API_GATEWAY.get(path)
+    console.log(response)
+    this.setState({
+      userId: response.user_id,
+      userName: response.user_name,
+      userSummary: response.user_summary,
+      postedWorkIdList: response.posted_work_id_list,
+      usersWorksList: response.usersWorksList,
+      loading: false,
+      userIconUrl: PATHS.ICONS_FOLDER_URL + '/' + response.user_id
+    })
   }
   private handleUserNameInput = (e: any) => { this.setState({ userName: e.target.value }) }
   private handleUserSummaryInput = (e: any) => { this.setState({ userSummary: e.target.value }) }
@@ -92,62 +83,19 @@ class MyPageEdit extends React.Component<IProps, IState> {
     }
     this.goBackToMyPage()
   }
-  private getPresignedUrl = () => {
-    return new Promise<string>((resolve, reject) => {
-      const path = `${PATHS.GET.S3_PRESIGNED_URL_FOR_USER_ICON_PATH}/${this.state.userId}/${this.state.fileType}`
-      const option = {}
-      console.log(`PATH: ${path}`)
-      API.get(API_GATEWAY.NAME, path, option)
-        .then(res => {
-          console.log(res)
-          resolve(res)
-        }).catch(err => {
-          console.log(err)
-          reject(err)
-        })
-    })
+  private getPresignedUrl = async () => {
+    const path = `${PATHS.GET.S3_PRESIGNED_URL_FOR_USER_ICON_PATH}/${this.state.userId}/${this.state.fileType}`
+    return await API.API_GATEWAY.get(path)
   }
-  private generateRequest = () => {
-    return {
-      body: {
-        userId: this.state.userId,
-        userName: this.state.userName,
-        userSummary: this.state.userSummary,
-        userIconImg: this.state.userIconImg,
-        postedWorkIdList: this.state.postedWorkIdList
-      }
-    }
+  private updateUserInfoToDynamo = async () => {
+    const request = formatRequestForUserInfo(this.state)
+    console.log(`REQUEST: ${JSON.stringify(request)}`)
+    await API.API_GATEWAY.post(PATHS.POST.UPDATE_USER_PATH, request)
   }
-  private updateUserInfoToDynamo = () => {
-    return new Promise((resolve, reject) => {
-      const request = this.generateRequest()
-      console.log(`REQUEST: ${JSON.stringify(request)}`)
-      API.post(API_GATEWAY.NAME, PATHS.POST.UPDATE_USER_PATH, request)
-        .then(async res => {
-          console.log(res)
-          resolve()
-        })
-        .catch(err => {
-          console.log(err)
-          reject()
-        })
-    })
-  }
-  private uploadFileToS3 = (url: string) => {
-    return new Promise((resolve, reject) => {
-      const file = this.state.file
-      console.log(`FILE_TYPE: ${this.state.fileType}`)
-      axios
-        .put(url, file, { headers: { 'Content-Type': this.state.fileType } })
-        .then(res => {
-          console.log(res)
-          resolve()
-        })
-        .catch(err => {
-          console.log(err)
-          reject()
-        })
-    })
+  private uploadFileToS3 = async (url: string) => {
+    const file = this.state.file
+    const option = { headers: { 'Content-Type': this.state.fileType } }
+    await API.S3.put(url, file, option)
   }
   private fileHandler = (e: any) => {
     e.persist()
