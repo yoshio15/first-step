@@ -1,6 +1,7 @@
 import React from 'react'
 import * as H from 'history'
-import { Container, Grid, Box, Card, CardContent, Typography } from '@material-ui/core'
+import { Container, Grid, Box, Card, CardContent, Typography, createStyles } from '@material-ui/core'
+import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import API from '../../utils/api'
 import { PATHS } from '../../constants/config'
 import LoadingArea from '../parts/LoadingArea'
@@ -8,7 +9,18 @@ import WorkCard, { WorkItemI } from '../parts/WorkCard'
 import EditProfileButton from '../parts/EditProfileButton'
 import { formatResponseForWorks } from '../../utils/formatter'
 
-interface IProps {
+const styles = (): StyleRules => createStyles({
+  userName: {
+    margin: '10px 0 10px',
+  },
+  userSummaryCard: {
+    height: '100%'
+  },
+  userSummary: {
+    whiteSpace: 'pre-wrap'
+  }
+})
+interface IProps extends WithStyles<typeof styles> {
   history: H.History,
   match: {
     params: { id: string }
@@ -55,39 +67,41 @@ class MyPage extends React.Component<IProps, IState> {
     })
   }
   render() {
+    const { classes } = this.props
     return (
       <Container>
         <Grid container justify='center'>
           <Grid item sm={9}>
             <Box mt={5}></Box>
-            <Card variant='outlined'>
-              {this.state.loading && <LoadingArea />}
-              <CardContent>
-                <Grid container>
-                  <Grid item sm={12}>
-                    <Typography variant='h6'>マイページ</Typography>
-                  </Grid>
-                </Grid>
-                <Box mt={3}></Box>
-                <Grid container>
-                  <Grid item sm={3}>
-                    <img src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`} width='104' height='104' />
-                    <Typography>{this.state.userName}</Typography>
-                    <EditProfileButton userId={this.state.userId} />
-                  </Grid>
-                  <Grid item sm={9}>
-                    <Typography>{this.state.userSummary}</Typography>
-                  </Grid>
-                </Grid>
-                <Box mt={5}></Box>
-                {this.state.usersWorksList.map(item => (
-                  <Container>
-                    <WorkCard item={item} />
-                    <Box mt={2}></Box>
-                  </Container>
-                ))}
-              </CardContent>
-            </Card>
+            {this.state.loading && <LoadingArea />}
+            <Box mt={3}></Box>
+            <Grid container justify='space-around'>
+              <Grid item sm={3}>
+                <Card variant='outlined'>
+                  <CardContent>
+                    <Grid container justify='center' direction='column' alignItems='center'>
+                      <img src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`} width='104' height='104' />
+                      <Typography className={classes.userName}>{this.state.userName}</Typography>
+                      <EditProfileButton userId={this.state.userId} />
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item sm={8}>
+                <Card variant='outlined' className={classes.userSummaryCard}>
+                  <CardContent>
+                    <Typography className={classes.userSummary}>{this.state.userSummary}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+            <Box mt={5}></Box>
+            {this.state.usersWorksList.map(item => (
+              <Container>
+                <WorkCard item={item} />
+                <Box mt={2}></Box>
+              </Container>
+            ))}
           </Grid>
         </Grid>
       </Container>
@@ -96,4 +110,4 @@ class MyPage extends React.Component<IProps, IState> {
 
 }
 
-export default MyPage
+export default withStyles(styles)(MyPage)
