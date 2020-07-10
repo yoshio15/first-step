@@ -4,9 +4,9 @@ import { Container, Grid, Box, Card, CardContent, Typography, createStyles } fro
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import API from '../../utils/api'
 import { PATHS } from '../../constants/config'
-import LoadingArea from '../parts/LoadingArea'
 import WorkCard, { WorkItemI } from '../parts/WorkCard'
 import EditProfileButton from '../parts/EditProfileButton'
+import LoadingDialog from '../parts/LoadingDialog'
 import { formatResponseForWorks } from '../../utils/formatter'
 
 const styles = (): StyleRules => createStyles({
@@ -73,7 +73,8 @@ class MyPage extends React.Component<IProps, IState> {
         <Grid container justify='center'>
           <Grid item sm={9}>
             <Box mt={5}></Box>
-            {this.state.loading && <LoadingArea />}
+            {/* {this.state.loading && <LoadingArea />} */}
+            <LoadingDialog isOpen={this.state.loading}/>
             <Box mt={3}></Box>
             <Grid container justify='space-around'>
               <Grid item sm={3}>
