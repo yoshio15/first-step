@@ -56,7 +56,9 @@ interface State {
   isValidatedTitle: boolean,
   titleErrorMsg: string,
   isValidatedDescription: boolean,
-  descriptionErrorMsg: string
+  descriptionErrorMsg: string,
+  isValidatedFile: boolean,
+  fileErrorMsg: string
 }
 
 class PostWork extends React.Component<Props, State> {
@@ -74,7 +76,9 @@ class PostWork extends React.Component<Props, State> {
     isValidatedTitle: true,
     titleErrorMsg: '',
     isValidatedDescription: true,
-    descriptionErrorMsg: ''
+    descriptionErrorMsg: '',
+    isValidatedFile: true,
+    fileErrorMsg: ''
   }
   private clickFileUploadBtn = () => {
     document.getElementById('file-input')!.click()
@@ -109,6 +113,7 @@ class PostWork extends React.Component<Props, State> {
     // setStateがStateの非同期的な更新を行うためローカル変数を定義(綺麗なやり方を模索する必要あり)
     let isOkTitle;
     let isOkDescription;
+    let isOkFile;
     if (this.state.title.length == 0 || this.state.title.length > 50) {
       this.setState((state, props) => ({
           isValidatedTitle: false,
@@ -129,7 +134,17 @@ class PostWork extends React.Component<Props, State> {
       this.setState({ isValidatedDescription: true })
       isOkDescription = true
     }
-    return isOkTitle && isOkDescription;
+    if (this.state.fileName.split('.').pop() !== 'html') {
+      this.setState({
+        isValidatedFile: false,
+        fileErrorMsg: MESSAGES.BAD_FILE_TYPE
+      })
+      isOkFile = false
+    } else {
+      this.setState({ isValidatedFile: true })
+      isOkFile = true
+    }
+    return isOkTitle && isOkDescription && isOkFile;
   }
   private postWork = async () => {
     this.setState({ isOpen: false, loading: true }) // ダイアログを閉じてバックドロップを表示
@@ -237,7 +252,17 @@ class PostWork extends React.Component<Props, State> {
                   justify='space-between'
                 >
                   <Grid md={9} item>
-                    <TextField required disabled fullWidth margin="normal" label="HTMLファイル（.html）" variant="outlined" value={this.state.fileName} />
+                    <TextField
+                      required
+                      disabled
+                      fullWidth
+                      margin="normal"
+                      label="HTMLファイル（.html）"
+                      variant="outlined"
+                      value={this.state.fileName}
+                      error={!this.state.isValidatedFile}
+                      helperText={!this.state.isValidatedFile ? this.state.fileErrorMsg: ''}
+                    />
                   </Grid>
                   <Grid md={2} item>
                     <Button

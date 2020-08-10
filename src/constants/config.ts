@@ -31,4 +31,5 @@ export const MESSAGES = {
   PASSWORD_MISMATCH: 'パスワードが一致しませんでした。もう一度確認してください。',
   TITLE_IS_TOO_LONG: '作品タイトルは50文字以内で入力してください。',
   DESCRIPTION_IS_TOO_LONG: '作品説明は400文字以内で入力してください。',
+  BAD_FILE_TYPE: '拡張子が「.html」であるファイルを添付してください。',
 }
