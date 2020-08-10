@@ -28,3 +28,5 @@ yarn-error.log*
 # for vim
 .*.un~
 .*.swp
+.*.swn
+.*.swo
