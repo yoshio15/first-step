@@ -29,10 +29,6 @@ const styles = (): StyleRules => createStyles({
   textArea: {
     height: '100%'
   }
-  // userName: {
-  //   position: 'relative',
-  //   zIndex: 1
-  // }
 })
 const filterTitleLength = (title: String) => {
   const MAX_TITLE_LENGTH = 32
