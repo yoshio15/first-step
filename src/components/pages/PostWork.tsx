@@ -4,7 +4,7 @@ import { API } from 'aws-amplify'
 import axios from 'axios'
 import * as H from 'history'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { Container, Paper, Grid, TextField, Button, Box, Fade, LinearProgress, CircularProgress, Backdrop } from '@material-ui/core'
+import { Container, Card, CardContent, Grid, TextField, Button, Box, Fade, LinearProgress, CircularProgress, Backdrop } from '@material-ui/core'
 import AttachFileIcon from '@material-ui/icons/AttachFile'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
@@ -29,9 +29,12 @@ const styles = (theme: Theme): StyleRules => createStyles({
     textAlign: 'center',
     position: 'relative'
   },
+  backBtn: {
+    marginRight: theme.spacing(2)
+  },
   spacer: {
     width: '100%',
-    height: '15px'
+    height: '10px'
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -159,70 +162,49 @@ class PostWork extends React.Component<Props, State> {
     const { classes } = this.props
     return (
       <Container>
-        <h2>作品を投稿</h2>
+        <Box mt={5}></Box>
         <Grid container justify='center'>
-          <Grid sm={11} item>
-            <Paper>
-              <Box mt={3}></Box>
-              <Grid container >
-                <Grid item sm={8}>
-                  <h3 className={classes.subTitle}>自分の作品を投稿する</h3>
-                </Grid>
-              </Grid>
-              <hr></hr>
-              <Box mt={2}></Box>
-              <Grid container>
-                <Grid item sm={3}>
-                  <h4 className={classes.label}>投稿のタイトル</h4>
-                </Grid>
-                <Grid item sm={8}>
-                  <TextField
-                    required
-                    fullWidth
-                    margin="normal"
-                    label="投稿タイトル"
-                    variant="outlined"
-                    value={this.state.title}
-                    onChange={this.handleTitleInput}
-                  />
-                </Grid>
-              </Grid>
-              <Box mt={2}></Box>
-              <Grid container>
-                <Grid item sm={3}>
-                  <h4 className={classes.label}>作品の説明</h4>
-                </Grid>
-                <Grid sm={8}>
-                  <TextField
-                    required
-                    fullWidth
-                    label="作品の説明"
-                    multiline
-                    rows="10"
-                    variant="outlined"
-                    margin="normal"
-                    value={this.state.description}
-                    onChange={this.handleDescriptionInput}
-                  />
-                </Grid>
-              </Grid>
-              <Box mt={2}></Box>
-              <Grid container>
-                <Grid item sm={3}>
-                  <h4 className={classes.label}>ファイル添付</h4>
-                </Grid>
-                <Grid item sm={6}>
-                  <TextField required disabled fullWidth margin="normal" label="添付ファイル" variant="outlined" value={this.state.fileName} />
-                </Grid>
-                <Grid container justify='center' xs={3}>
-                  <Grid item className={classes.buttonWrapper}>
+          <Grid sm={9} item>
+            <Card variant='outlined'>
+              <CardContent>
+                <TextField
+                  required
+                  fullWidth
+                  margin="normal"
+                  label="投稿タイトル"
+                  variant="outlined"
+                  value={this.state.title}
+                  onChange={this.handleTitleInput}
+                />
+                <Box mt={2}></Box>
+                <TextField
+                  required
+                  fullWidth
+                  label="作品の説明"
+                  multiline
+                  rows="10"
+                  variant="outlined"
+                  margin="normal"
+                  value={this.state.description}
+                  onChange={this.handleDescriptionInput}
+                />
+                <Box mt={2}></Box>
+                <Grid
+                  container
+                  direction='row'
+                  justify='space-between'
+                >
+                  <Grid md={9} item>
+                    <TextField required disabled fullWidth margin="normal" label="添付ファイル" variant="outlined" value={this.state.fileName} />
+                  </Grid>
+                  <Grid md={2} item>
                     <Button
                       className={classes.button}
                       variant="contained"
                       startIcon={<AttachFileIcon />}
                       onClick={this.clickFileUploadBtn}
                     >ファイル添付
-                    <input
+                        <input
                         id="file-input"
                         type="file"
                         value=""
@@ -233,41 +215,36 @@ class PostWork extends React.Component<Props, State> {
                     </Button>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Box mt={2}></Box>
-              <Grid container justify='flex-end'>
-                <Grid item sm={3}>
-                  <Grid container justify='space-evenly'>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        component={Link}
-                        to='works-list'
-                      >戻る</Button>
-                    </Grid>
-                    <Grid item>
-                      {/* Todo 押下時にダイアログを表示、入力値バリデーション */}
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.openDialog}
-                      >
-                        <Create />投稿する
-                      </Button>
-                    </Grid>
-                  </Grid>
+                <Box mt={2}></Box>
+                <Grid
+                  container
+                  direction='row'
+                  justify='flex-end'
+                >
+                  <Button
+                    className={classes.backBtn}
+                    variant="contained"
+                    component={Link}
+                    to='works-list'
+                  >戻る</Button>
+                  {/* Todo 押下時にダイアログを表示、入力値バリデーション */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={this.openDialog}
+                  ><Create />投稿する</Button>
                 </Grid>
-              </Grid>
-              <Backdrop className={classes.backdrop} open={this.state.loading}>
-                <CircularProgress color='inherit' />
-              </Backdrop>
-              <PostDialog
-                isOpen={this.state.isOpen}
-                handleClose={() => this.setState({ isOpen: false })}
-                execute={this.postWork}
-              />
-              <div className={classes.spacer}></div>
-            </Paper>
+                <Backdrop className={classes.backdrop} open={this.state.loading}>
+                  <CircularProgress color='inherit' />
+                </Backdrop>
+                <PostDialog
+                  isOpen={this.state.isOpen}
+                  handleClose={() => this.setState({ isOpen: false })}
+                  execute={this.postWork}
+                />
+                <div className={classes.spacer}></div>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
       </Container>
