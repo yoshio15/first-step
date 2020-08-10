@@ -11,7 +11,7 @@ import createStyles from "@material-ui/core/styles/createStyles";
 import Create from '@material-ui/icons/Create';
 import PostDialog from '../parts/PostDialog'
 import Store from '../../store/index'
-import { PATHS, API_GATEWAY } from '../../constants/config'
+import { PATHS, API_GATEWAY, MESSAGES } from '../../constants/config'
 
 const styles = (theme: Theme): StyleRules => createStyles({
   subTitle: {
@@ -52,7 +52,11 @@ interface State {
   fileName: string,
   file: File | undefined,
   isOpen: boolean,
-  loading: boolean
+  loading: boolean,
+  isValidatedTitle: boolean,
+  titleErrorMsg: string,
+  isValidatedDescription: boolean,
+  descriptionErrorMsg: string
 }
 
 class PostWork extends React.Component<Props, State> {
@@ -66,7 +70,11 @@ class PostWork extends React.Component<Props, State> {
     fileName: '',
     file: undefined,
     isOpen: false,
-    loading: false
+    loading: false,
+    isValidatedTitle: true,
+    titleErrorMsg: '',
+    isValidatedDescription: true,
+    descriptionErrorMsg: ''
   }
   private clickFileUploadBtn = () => {
     document.getElementById('file-input')!.click()
@@ -97,8 +105,38 @@ class PostWork extends React.Component<Props, State> {
     return Math.floor(1000 * Math.random()).toString(16) + Date.now().toString(16)
   }
   private openDialog = () => this.setState({ isOpen: true })
+  private isValidateInputs = () => {
+    // setStateがStateの非同期的な更新を行うためローカル変数を定義(綺麗なやり方を模索する必要あり)
+    let isOkTitle;
+    let isOkDescription;
+    if (this.state.title.length == 0 || this.state.title.length > 50) {
+      this.setState((state, props) => ({
+          isValidatedTitle: false,
+          titleErrorMsg: MESSAGES.TITLE_IS_TOO_LONG
+      }))
+      isOkTitle = false
+    } else {
+      this.setState({ isValidatedTitle: true })
+      isOkTitle = true
+    }
+    if (this.state.description.length == 0 || this.state.description.length > 400) {
+      this.setState({
+        isValidatedDescription: false,
+        descriptionErrorMsg: MESSAGES.DESCRIPTION_IS_TOO_LONG
+      })
+      isOkDescription = false
+    } else {
+      this.setState({ isValidatedDescription: true })
+      isOkDescription = true
+    }
+    return isOkTitle && isOkDescription;
+  }
   private postWork = async () => {
     this.setState({ isOpen: false, loading: true }) // ダイアログを閉じてバックドロップを表示
+    if (!this.isValidateInputs()) {
+      this.setState({ loading: false })
+      return
+    }
     const workId = this.getUniqueId()
     const request = await this.generateRequest(workId)
     this.setState({ workId })
@@ -175,6 +213,8 @@ class PostWork extends React.Component<Props, State> {
                   variant="outlined"
                   value={this.state.title}
                   onChange={this.handleTitleInput}
+                  error={!this.state.isValidatedTitle}
+                  helperText={!this.state.isValidatedTitle ? this.state.titleErrorMsg: ''}
                 />
                 <Box mt={2}></Box>
                 <TextField
@@ -187,6 +227,8 @@ class PostWork extends React.Component<Props, State> {
                   margin="normal"
                   value={this.state.description}
                   onChange={this.handleDescriptionInput}
+                  error={!this.state.isValidatedDescription}
+                  helperText={!this.state.isValidatedDescription ? this.state.descriptionErrorMsg: ''}
                 />
                 <Box mt={2}></Box>
                 <Grid

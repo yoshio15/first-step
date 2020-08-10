@@ -29,4 +29,6 @@ export const MESSAGES = {
   NO_CONFIRMED_USER: 'メールアドレスが認証されていません。',
   MISSING_PARAMETERS_SIGNUP: 'ユーザ名・メールアドレス・パスワード全て入力必須です。',
   PASSWORD_MISMATCH: 'パスワードが一致しませんでした。もう一度確認してください。',
+  TITLE_IS_TOO_LONG: '作品タイトルは50文字以内で入力してください。',
+  DESCRIPTION_IS_TOO_LONG: '作品説明は400文字以内で入力してください。',
 }
