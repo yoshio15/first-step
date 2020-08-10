@@ -53,9 +53,9 @@ const WorkCard: React.FC<PropsI> = (props: PropsI) => {
       variant='outlined'
       onClick={() => goToDescriptionPage()}
     >
-      <CardContent>
+      <CardContent style={{paddingBottom: '16px'}}>
         <Grid container>
-          <Grid sm={2} className={classes.userIconArea} item>
+          <Grid className={classes.userIconArea} item>
             <img
               src={`${PATHS.ICONS_FOLDER_URL}/${item.userId}`}
               className={classes.userIcon} width='80' height='80'
