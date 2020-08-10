@@ -171,7 +171,7 @@ class PostWork extends React.Component<Props, State> {
                   required
                   fullWidth
                   margin="normal"
-                  label="投稿タイトル"
+                  label="作品タイトル（50文字以内）"
                   variant="outlined"
                   value={this.state.title}
                   onChange={this.handleTitleInput}
@@ -180,7 +180,7 @@ class PostWork extends React.Component<Props, State> {
                 <TextField
                   required
                   fullWidth
-                  label="作品の説明"
+                  label="作品の説明（400文字以内）"
                   multiline
                   rows="10"
                   variant="outlined"
@@ -195,7 +195,7 @@ class PostWork extends React.Component<Props, State> {
                   justify='space-between'
                 >
                   <Grid md={9} item>
-                    <TextField required disabled fullWidth margin="normal" label="添付ファイル" variant="outlined" value={this.state.fileName} />
+                    <TextField required disabled fullWidth margin="normal" label="HTMLファイル（.html）" variant="outlined" value={this.state.fileName} />
                   </Grid>
                   <Grid md={2} item>
                     <Button
