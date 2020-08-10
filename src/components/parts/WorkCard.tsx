@@ -28,6 +28,11 @@ const styles = (): StyleRules => createStyles({
   //   zIndex: 1
   // }
 })
+const filterTitleLength = (title: String) => {
+  const MAX_TITLE_LENGTH = 32
+  return title.length > MAX_TITLE_LENGTH ?
+    title.slice(0, MAX_TITLE_LENGTH) + ' ...' : title
+}
 const WorkCard: React.FC<PropsI> = (props: PropsI) => {
   const { classes, item } = props
   const history = useHistory()
@@ -51,7 +56,7 @@ const WorkCard: React.FC<PropsI> = (props: PropsI) => {
             />
           </Grid>
           <Grid sm={10} item>
-            <Typography variant='h6'>{item.title}</Typography>
+            <Typography variant='h6'>{filterTitleLength(item.title)}</Typography>
             {/* Todo: ユーザプロフィールページへのリンクが効かない問題 */}
             <Link to={`/mypage/${item.userId}`} className={classes.userName}>
               <Typography variant='body2' color='textSecondary'>
