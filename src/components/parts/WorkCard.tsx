@@ -23,6 +23,12 @@ const styles = (): StyleRules => createStyles({
   userIcon: {
     borderRadius: '50%',
   },
+  userIconArea: {
+    marginRight: '10px'
+  },
+  textArea: {
+    height: '100%'
+  }
   // userName: {
   //   position: 'relative',
   //   zIndex: 1
@@ -49,23 +55,24 @@ const WorkCard: React.FC<PropsI> = (props: PropsI) => {
     >
       <CardContent>
         <Grid container>
-          <Grid sm={2} item>
+          <Grid sm={2} className={classes.userIconArea} item>
             <img
               src={`${PATHS.ICONS_FOLDER_URL}/${item.userId}`}
               className={classes.userIcon} width='80' height='80'
             />
           </Grid>
-          <Grid sm={10} item>
-            <Typography variant='h6'>{filterTitleLength(item.title)}</Typography>
-            {/* Todo: ユーザプロフィールページへのリンクが効かない問題 */}
-            <Link to={`/mypage/${item.userId}`} className={classes.userName}>
+          <Grid item>
+            <Grid
+              container
+              direction='column'
+              justify='space-evenly'
+              className={classes.textArea}
+            >
+              <Typography variant='h6'>{filterTitleLength(item.title)}</Typography>
               <Typography variant='body2' color='textSecondary'>
-                投稿者：{item.userName}
+                by {item.userName}, at {item.postedAt}
               </Typography>
-            </Link>
-            <Typography variant='body2' color='textSecondary'>
-              投稿日時：{item.postedAt}
-            </Typography>
+            </Grid>
           </Grid>
         </Grid>
       </CardContent>
