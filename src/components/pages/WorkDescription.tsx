@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { API } from 'aws-amplify'
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, CircularProgress, LinearProgress, Fade, createStyles } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import { PATHS, API_GATEWAY } from '../../constants/config'
@@ -33,10 +34,13 @@ interface IState {
   postedAt: string,
   loading: boolean,
 }
-const styles = (): StyleRules => createStyles({
+const styles = (theme: Theme): StyleRules => createStyles({
   description: {
     whiteSpace: 'pre-wrap'
-  }
+  },
+  backBtn: {
+    marginRight: theme.spacing(2)
+  },
 })
 class WorkDescription extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -108,17 +112,24 @@ class WorkDescription extends React.Component<IProps, IState> {
                 <Typography className={classes.description}>{this.state.description}</Typography>
               </CardContent>
               <CardActions>
-                <Button
-                  color='primary'
-                  component={Link}
-                  to='../../works-list'
-                  variant='outlined'
-                >作品一覧に戻る</Button>
-                <Button
-                  color='primary'
-                  variant='contained'
-                  onClick={() => this.goToWorkPage()}
-                >作品を見る</Button>
+                <Grid
+                  container
+                  direction='row'
+                  justify='flex-end'
+                >
+                  <Button
+                    color='primary'
+                    component={Link}
+                    to='../../works-list'
+                    variant='outlined'
+                    className={classes.backBtn}
+                  >作品一覧に戻る</Button>
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    onClick={() => this.goToWorkPage()}
+                  >作品を見る</Button>
+                </Grid>
               </CardActions>
             </Card>
           </Grid>
