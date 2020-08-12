@@ -76,7 +76,7 @@ class MyPage extends React.Component<IProps, IState> {
             {/* {this.state.loading && <LoadingArea />} */}
             <LoadingDialog isOpen={this.state.loading}/>
             <Box mt={3}></Box>
-            <Grid container justify='space-around'>
+            <Grid container justify='space-between'>
               <Grid item sm={3}>
                 <Card variant='outlined'>
                   <CardContent>
@@ -97,12 +97,19 @@ class MyPage extends React.Component<IProps, IState> {
               </Grid>
             </Grid>
             <Box mt={5}></Box>
-            {this.state.usersWorksList.map(item => (
-              <Container>
-                <WorkCard item={item} />
-                <Box mt={2}></Box>
-              </Container>
-            ))}
+            <Grid container justify='space-around'>
+              <Grid item>
+                <Card variant='outlined'>
+                  <Box mt={2}></Box>
+                  {this.state.usersWorksList.map(item => (
+                    <Container>
+                      <WorkCard item={item} />
+                      <Box mt={2}></Box>
+                    </Container>
+                  ))}
+                </Card>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Container>
