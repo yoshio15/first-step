@@ -4,7 +4,7 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { Container, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, createStyles } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import API from '../../utils/api'
-import { PATHS } from '../../constants/config'
+import { PATHS, MESSAGES } from '../../constants/config'
 import { formatRequestForUserInfo } from '../../utils/formatter'
 import LoadingArea from '../parts/LoadingArea'
 
@@ -42,6 +42,10 @@ interface IState {
   fileType: string,
   usersWorksList: IWorkEntity[],
   loading: boolean,
+  isValidatedUserName: boolean,
+  userNameErrorMsg: string,
+  isValidatedUserSummary: boolean,
+  userSummaryErrorMsg: string,
 }
 class MyPageEdit extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -59,6 +63,10 @@ class MyPageEdit extends React.Component<IProps, IState> {
     fileType: '',
     usersWorksList: [],
     loading: false,
+    isValidatedUserName: true,
+    userNameErrorMsg: '',
+    isValidatedUserSummary: true,
+    userSummaryErrorMsg: '',
   }
   componentDidMount() {
     this.getUser()
@@ -82,7 +90,34 @@ class MyPageEdit extends React.Component<IProps, IState> {
   private handleUserNameInput = (e: any) => { this.setState({ userName: e.target.value }) }
   private handleUserSummaryInput = (e: any) => { this.setState({ userSummary: e.target.value }) }
   private goBackToMyPage = () => { this.props.history.push(`/mypage/${this.state.userId}`) }
+  private isValidateInputs = () => {
+    // setStateがStateの非同期的な更新を行うためローカル変数を定義(綺麗なやり方を模索する必要あり)
+    let isOkUserName;
+    let isOkUserSummary;
+    if (this.state.userName.length == 0 || this.state.userName.length > 30) {
+      this.setState((state, props) => ({
+          isValidatedUserName: false,
+          userNameErrorMsg: MESSAGES.USER_NAME_IS_TOO_LONG
+      }))
+      isOkUserName = false
+    } else {
+      this.setState({ isValidatedUserName: true })
+      isOkUserName = true
+    }
+    if (this.state.userSummary.length == 0 || this.state.userSummary.length > 400) {
+      this.setState({
+        isValidatedUserSummary: false,
+        userSummaryErrorMsg: MESSAGES.USER_SUMMARY_IS_TOO_LONG
+      })
+      isOkUserSummary = false
+    } else {
+      this.setState({ isValidatedUserSummary: true })
+      isOkUserSummary = true
+    }
+    return isOkUserName && isOkUserSummary;
+  }
   private updateUserProfile = async () => {
+    if (!this.isValidateInputs()) return;
     // ユーザ情報の更新
     await this.updateUserInfoToDynamo()
     // アイコンファイルに変更がある場合
@@ -176,6 +211,8 @@ class MyPageEdit extends React.Component<IProps, IState> {
                       margin="normal"
                       value={this.state.userName}
                       onChange={this.handleUserNameInput}
+                      error={!this.state.isValidatedUserName}
+                      helperText={!this.state.isValidatedUserName ? this.state.userNameErrorMsg: ''}
                     />
                   </Grid>
                   <Grid item sm={12}>
@@ -190,6 +227,8 @@ class MyPageEdit extends React.Component<IProps, IState> {
                       margin="normal"
                       value={this.state.userSummary}
                       onChange={this.handleUserSummaryInput}
+                      error={!this.state.isValidatedUserSummary}
+                      helperText={!this.state.isValidatedUserSummary ? this.state.userSummaryErrorMsg: ''}
                     />
                   </Grid>
                 </Grid>

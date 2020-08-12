@@ -32,4 +32,6 @@ export const MESSAGES = {
   TITLE_IS_TOO_LONG: '作品タイトルは50文字以内で入力してください。',
   DESCRIPTION_IS_TOO_LONG: '作品説明は400文字以内で入力してください。',
   BAD_FILE_TYPE: '拡張子が「.html」であるファイルを添付してください。',
+  USER_NAME_IS_TOO_LONG: 'ユーザ名は30文字以内で入力してください。',
+  USER_SUMMARY_IS_TOO_LONG: '自己紹介文は400文字以内で入力してください。'
 }
