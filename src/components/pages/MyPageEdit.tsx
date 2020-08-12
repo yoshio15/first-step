@@ -1,11 +1,21 @@
 import React from 'react'
 import * as H from 'history'
-import { Container, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography } from '@material-ui/core'
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { Container, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, createStyles } from '@material-ui/core'
+import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import API from '../../utils/api'
 import { PATHS } from '../../constants/config'
 import { formatRequestForUserInfo } from '../../utils/formatter'
 import LoadingArea from '../parts/LoadingArea'
 
+const styles = (theme: Theme): StyleRules => createStyles({
+  subTitle: {
+    fontWeight: 'bold'
+  },
+  cancelBtn: {
+    marginRight: theme.spacing(2)
+  },
+})
 interface IWorkEntity {
   work_id: string,
   title: string,
@@ -14,7 +24,7 @@ interface IWorkEntity {
   user_name: string,
   posted_at: number
 }
-interface IProps {
+interface IProps extends WithStyles<typeof styles> {
   history: H.History,
   match: {
     params: { id: string }
@@ -115,6 +125,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
     document.getElementById('file-input')!.click()
   }
   render() {
+    const { classes } = this.props
     console.log(this.state)
     return (
       <Container>
@@ -156,7 +167,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                     </Grid>
                   </Grid>
                   <Grid item sm={10}>
-                    <Typography>ユーザ名</Typography>
+                    <Typography className={classes.subTitle}>ユーザ名</Typography>
                     <TextField
                       required
                       fullWidth
@@ -169,7 +180,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                   </Grid>
                   <Grid item sm={12}>
                     <Box mt={5}></Box>
-                    <Typography>自己紹介</Typography>
+                    <Typography className={classes.subTitle}>自己紹介</Typography>
                     <TextField
                       required
                       fullWidth
@@ -182,19 +193,26 @@ class MyPageEdit extends React.Component<IProps, IState> {
                     />
                   </Grid>
                 </Grid>
-                <CardActions>
+              </CardContent>
+              <CardActions>
+                <Grid
+                  container
+                  direction='row'
+                  justify='flex-end'
+                >
                   <Button
                     color='primary'
                     variant='outlined'
                     onClick={() => this.goBackToMyPage()}
+                    className={classes.cancelBtn}
                   >キャンセル</Button>
                   <Button
                     color='primary'
                     variant='contained'
                     onClick={() => { this.updateUserProfile() }}
                   >保存</Button>
-                </CardActions>
-              </CardContent>
+                </Grid>
+              </CardActions>
             </Card>
           </Grid>
         </Grid>
@@ -203,4 +221,4 @@ class MyPageEdit extends React.Component<IProps, IState> {
   }
 }
 
-export default MyPageEdit;
+export default withStyles(styles)(MyPageEdit);
