@@ -139,19 +139,21 @@ class MyPageEdit extends React.Component<IProps, IState> {
                 <Box mt={3}></Box>
                 <Grid container>
                   <Grid item sm={2}>
-                    <img
-                      src={this.state.userIconUrl}
-                      width='104'
-                      height='104'
-                      onClick={() => this.clickFileUploadBtn()}
-                    />
-                    <input
-                      id="file-input"
-                      type="file"
-                      value=""
-                      style={{ display: "none" }}
-                      onChange={this.fileHandler}
-                    />
+                    <Grid container justify='center'>
+                      <img
+                        src={this.state.userIconUrl}
+                        width='104'
+                        height='104'
+                        onClick={() => this.clickFileUploadBtn()}
+                      />
+                      <input
+                        id="file-input"
+                        type="file"
+                        value=""
+                        style={{ display: "none" }}
+                        onChange={this.fileHandler}
+                      />
+                    </Grid>
                   </Grid>
                   <Grid item sm={10}>
                     <Typography>ユーザ名</Typography>
@@ -166,7 +168,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                     />
                   </Grid>
                   <Grid item sm={12}>
-                    <Box mt={3}></Box>
+                    <Box mt={5}></Box>
                     <Typography>自己紹介</Typography>
                     <TextField
                       required
@@ -188,7 +190,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                   >キャンセル</Button>
                   <Button
                     color='primary'
-                    variant='outlined'
+                    variant='contained'
                     onClick={() => { this.updateUserProfile() }}
                   >保存</Button>
                 </CardActions>
