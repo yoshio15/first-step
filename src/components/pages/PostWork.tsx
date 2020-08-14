@@ -11,6 +11,7 @@ import createStyles from "@material-ui/core/styles/createStyles";
 import Create from '@material-ui/icons/Create';
 import PostDialog from '../parts/PostDialog'
 import Store from '../../store/index'
+import { getUniqueId } from '../../utils/common'
 import { PATHS, API_GATEWAY, MESSAGES } from '../../constants/config'
 
 const styles = (theme: Theme): StyleRules => createStyles({
@@ -105,9 +106,6 @@ class PostWork extends React.Component<Props, State> {
       }
     }
   }
-  private getUniqueId = () => {
-    return Math.floor(1000 * Math.random()).toString(16) + Date.now().toString(16)
-  }
   private openDialog = () => this.setState({ isOpen: true })
   private isValidateInputs = () => {
     // setStateがStateの非同期的な更新を行うためローカル変数を定義(綺麗なやり方を模索する必要あり)
@@ -116,8 +114,8 @@ class PostWork extends React.Component<Props, State> {
     let isOkFile;
     if (this.state.title.length == 0 || this.state.title.length > 50) {
       this.setState((state, props) => ({
-          isValidatedTitle: false,
-          titleErrorMsg: MESSAGES.TITLE_IS_TOO_LONG
+        isValidatedTitle: false,
+        titleErrorMsg: MESSAGES.TITLE_IS_TOO_LONG
       }))
       isOkTitle = false
     } else {
@@ -152,7 +150,7 @@ class PostWork extends React.Component<Props, State> {
       this.setState({ loading: false })
       return
     }
-    const workId = this.getUniqueId()
+    const workId = getUniqueId()
     const request = await this.generateRequest(workId)
     this.setState({ workId })
     Promise.all([
@@ -208,9 +206,7 @@ class PostWork extends React.Component<Props, State> {
         })
     })
   }
-  componentDidMount() {
-    console.log(this.getUniqueId())
-  }
+  componentDidMount() { }
   render() {
     const { classes } = this.props
     return (
@@ -229,7 +225,7 @@ class PostWork extends React.Component<Props, State> {
                   value={this.state.title}
                   onChange={this.handleTitleInput}
                   error={!this.state.isValidatedTitle}
-                  helperText={!this.state.isValidatedTitle ? this.state.titleErrorMsg: ''}
+                  helperText={!this.state.isValidatedTitle ? this.state.titleErrorMsg : ''}
                 />
                 <Box mt={2}></Box>
                 <TextField
@@ -243,7 +239,7 @@ class PostWork extends React.Component<Props, State> {
                   value={this.state.description}
                   onChange={this.handleDescriptionInput}
                   error={!this.state.isValidatedDescription}
-                  helperText={!this.state.isValidatedDescription ? this.state.descriptionErrorMsg: ''}
+                  helperText={!this.state.isValidatedDescription ? this.state.descriptionErrorMsg : ''}
                 />
                 <Box mt={2}></Box>
                 <Grid
@@ -261,7 +257,7 @@ class PostWork extends React.Component<Props, State> {
                       variant="outlined"
                       value={this.state.fileName}
                       error={!this.state.isValidatedFile}
-                      helperText={!this.state.isValidatedFile ? this.state.fileErrorMsg: ''}
+                      helperText={!this.state.isValidatedFile ? this.state.fileErrorMsg : ''}
                     />
                   </Grid>
                   <Grid md={2} item>
