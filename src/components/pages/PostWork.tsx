@@ -1,7 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { API } from 'aws-amplify'
-import axios from 'axios'
 import * as H from 'history'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { Container, Card, CardContent, Grid, TextField, Button, Box, Fade, LinearProgress, CircularProgress, Backdrop } from '@material-ui/core'
@@ -12,7 +10,8 @@ import Create from '@material-ui/icons/Create';
 import PostDialog from '../parts/PostDialog'
 import Store from '../../store/index'
 import { getUniqueId } from '../../utils/common'
-import { PATHS, API_GATEWAY, MESSAGES } from '../../constants/config'
+import API from '../../utils/api'
+import { PATHS, MESSAGES } from '../../constants/config'
 
 const styles = (theme: Theme): StyleRules => createStyles({
   subTitle: {
@@ -165,46 +164,14 @@ class PostWork extends React.Component<Props, State> {
     })
   }
   private uploadFileToS3 = (url: string) => {
-    return new Promise((resolve, reject) => {
-      const file = this.state.file
-      console.log(file)
-      axios
-        .put(url, file, { headers: { 'Content-Type': 'text/html' } })
-        .then(res => {
-          console.log(res)
-          resolve()
-        })
-        .catch(err => {
-          console.log(err)
-          reject()
-        })
-
-    })
+    const option = { headers: { 'Content-Type': 'text/html' } }
+    return API.S3.put(url, this.state.file, option)
   }
   private getPrisignedUrlForUploadToS3 = (workId: string) => {
-    return new Promise<string>((resolve, reject) => {
-      const option = {}
-      const path = `${PATHS.GET.S3_PRESIGNED_URL_PATH}/${workId}`
-      console.log('PATH: ' + path)
-      API.get(API_GATEWAY.NAME, path, option)
-        .then(res => {
-          resolve(res)
-        }).catch(err => {
-          reject(err)
-        })
-    })
+    return API.API_GATEWAY.get(`${PATHS.GET.S3_PRESIGNED_URL_PATH}/${workId}`)
   }
   private postMetaInfoToDynamo = (request: any) => {
-    return new Promise((resolve, reject) => {
-      API.post(API_GATEWAY.NAME, PATHS.POST.NEW_WORK_PATH, request)
-        .then(response => {
-          console.log(response)
-          resolve(response)
-        }).catch(error => {
-          console.log(error)
-          reject(error)
-        })
-    })
+    return API.API_GATEWAY.post(PATHS.POST.NEW_WORK_PATH, request)
   }
   componentDidMount() { }
   render() {
