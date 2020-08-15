@@ -12,7 +12,7 @@ const EditProfileButton: React.FC<PropsI> = (props: PropsI) => {
   const goToEditPage = () => history.push(`/mypage/edit/${userId}`)
   return (
     <Button
-      color='inherit'
+      size='small'
       variant='outlined'
       onClick={() => goToEditPage()}
     >プロフィールを編集する</Button>
