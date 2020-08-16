@@ -3,7 +3,7 @@ import * as H from 'history'
 import { Container, Grid, Box, Card, CardContent, Button, createStyles } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import Store from '../../store/index'
-import { PATHS } from '../../constants/config'
+import { PATHS , APP_CONF } from '../../constants/config'
 import API from '../../utils/api'
 import { formatResponseForWorks } from '../../utils/formatter'
 import LoadingArea from '../parts/LoadingArea'
@@ -32,11 +32,9 @@ class WorksList extends React.Component<PropsI, StateI> {
   constructor(props: PropsI) {
     super(props)
   }
-  private INITIAL_WORKS_TO_DISPLAY = 5
-  private ADDITIONAL_WORKS_TO_DISPLAY = 5
   state: StateI = {
     loading: false,
-    worksToDisplay: this.INITIAL_WORKS_TO_DISPLAY,
+    worksToDisplay: APP_CONF.INITIAL_WORKS_TO_DISPLAY,
     itemList: []
   }
   componentDidMount() {
@@ -49,7 +47,7 @@ class WorksList extends React.Component<PropsI, StateI> {
     this.setState({ itemList, loading: false })
   }
   countUpWorksToDisplay() {
-    this.setState({ worksToDisplay: this.state.worksToDisplay + this.ADDITIONAL_WORKS_TO_DISPLAY })
+    this.setState({ worksToDisplay: this.state.worksToDisplay + APP_CONF.ADDITIONAL_WORKS_TO_DISPLAY })
   }
 
   render() {

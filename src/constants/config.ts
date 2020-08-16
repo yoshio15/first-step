@@ -35,3 +35,8 @@ export const MESSAGES = {
   USER_NAME_IS_TOO_LONG: 'ユーザ名は30文字以内で入力してください。',
   USER_SUMMARY_IS_TOO_LONG: '自己紹介文は400文字以内で入力してください。'
 }
+
+export class APP_CONF {
+  static readonly INITIAL_WORKS_TO_DISPLAY = 5
+  static readonly ADDITIONAL_WORKS_TO_DISPLAY = 5
+}
