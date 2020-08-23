@@ -6,7 +6,6 @@ import API from '../../utils/api'
 import { PATHS } from '../../constants/config'
 import WorkCard, { WorkItemI } from '../parts/WorkCard'
 import EditProfileButton from '../parts/EditProfileButton'
-import LoadingDialog from '../parts/LoadingDialog'
 import LoadingArea from '../parts/LoadingArea'
 import { formatResponseForWorks } from '../../utils/formatter'
 
@@ -74,7 +73,6 @@ class MyPage extends React.Component<IProps, IState> {
         <Grid container justify='center'>
           <Grid item sm={9}>
             <Box mt={5}></Box>
-            {/* <LoadingDialog isOpen={this.state.loading} /> */}
             <Grid container justify='space-around'>
               <Grid item>
                 <Card variant='outlined'>
