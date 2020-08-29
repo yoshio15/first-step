@@ -10,7 +10,6 @@ import LoadingArea from '../parts/LoadingArea'
 import WorkCard from '../parts/WorkCard'
 
 const styles = (): StyleRules => createStyles({})
-// Stateとして保持するリストのインターフェース
 interface ResponseListI {
   workId: string,
   title: string,

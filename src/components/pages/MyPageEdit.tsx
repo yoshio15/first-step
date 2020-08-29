@@ -91,7 +91,6 @@ class MyPageEdit extends React.Component<IProps, IState> {
   private handleUserSummaryInput = (e: any) => { this.setState({ userSummary: e.target.value }) }
   private goBackToMyPage = () => { this.props.history.push(`/mypage/${this.state.userId}`) }
   private isValidateInputs = () => {
-    // setStateがStateの非同期的な更新を行うためローカル変数を定義(綺麗なやり方を模索する必要あり)
     let isOkUserName;
     let isOkUserSummary;
     if (this.state.userName.length == 0 || this.state.userName.length > 30) {

@@ -107,7 +107,6 @@ class PostWork extends React.Component<Props, State> {
   }
   private openDialog = () => this.setState({ isOpen: true })
   private isValidateInputs = () => {
-    // setStateがStateの非同期的な更新を行うためローカル変数を定義(綺麗なやり方を模索する必要あり)
     let isOkTitle;
     let isOkDescription;
     let isOkFile;
@@ -144,7 +143,7 @@ class PostWork extends React.Component<Props, State> {
     return isOkTitle && isOkDescription && isOkFile;
   }
   private postWork = async () => {
-    this.setState({ isOpen: false, loading: true }) // ダイアログを閉じてバックドロップを表示
+    this.setState({ isOpen: false, loading: true })
     if (!this.isValidateInputs()) {
       this.setState({ loading: false })
       return
@@ -240,7 +239,6 @@ class PostWork extends React.Component<Props, State> {
                         value=""
                         style={{ display: "none" }}
                         onChange={this.fileHandler}
-                      // onClick={e => { e.persist(); e.target.value = '' }}
                       />
                     </Button>
                   </Grid>
@@ -257,7 +255,6 @@ class PostWork extends React.Component<Props, State> {
                     component={Link}
                     to='works-list'
                   >戻る</Button>
-                  {/* Todo 押下時にダイアログを表示、入力値バリデーション */}
                   <Button
                     variant="contained"
                     color="primary"

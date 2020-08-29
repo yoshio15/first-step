@@ -8,7 +8,6 @@ import { PATHS, API_GATEWAY } from '../../constants/config'
 import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
 import LoadingArea from '../parts/LoadingArea'
 
-// DBから取得するリストのインターフェース
 interface IResponse {
   work_id: string,
   title: string,
