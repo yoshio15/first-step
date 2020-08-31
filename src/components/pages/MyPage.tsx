@@ -73,42 +73,38 @@ class MyPage extends React.Component<IProps, IState> {
         <Grid container justify='center'>
           <Grid item sm={9}>
             <Box mt={5}></Box>
-            <Grid container justify='space-around'>
-              <Grid item>
-                <Card variant='outlined'>
-                  {this.state.loading && <LoadingArea />}
-                  <Box mt={3}></Box>
-                  <Grid container justify='space-evenly'>
-                    <Grid item sm={3}>
-                      <Card variant='outlined'>
-                        <CardContent>
-                          <Grid container justify='center' direction='column' alignItems='center'>
-                            <img src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`} width='104' height='104' />
-                            <Typography className={classes.userName}>{this.state.userName}</Typography>
-                            <EditProfileButton userId={this.state.userId} />
-                          </Grid>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                    <Grid item sm={8}>
-                      <Card variant='outlined' className={classes.userSummaryCard}>
-                        <CardContent>
-                          <Typography className={classes.userSummary}>{this.state.userSummary}</Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  </Grid>
-                  <Box mt={5}></Box>
-                  <Box mt={2}></Box>
-                  {this.state.usersWorksList.map(item => (
-                    <Container>
-                      <WorkCard item={item} />
-                      <Box mt={2}></Box>
-                    </Container>
-                  ))}
-                </Card>
+            <Card variant='outlined'>
+              {this.state.loading && <LoadingArea />}
+              <Box mt={3}></Box>
+              <Grid container justify='space-evenly'>
+                <Grid item sm={3}>
+                  <Card variant='outlined'>
+                    <CardContent>
+                      <Grid container justify='center' direction='column' alignItems='center'>
+                        <img src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`} width='104' height='104' />
+                        <Typography className={classes.userName}>{this.state.userName}</Typography>
+                        <EditProfileButton userId={this.state.userId} />
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item sm={8}>
+                  <Card variant='outlined' className={classes.userSummaryCard}>
+                    <CardContent>
+                      <Typography className={classes.userSummary}>{this.state.userSummary}</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
               </Grid>
-            </Grid>
+              <Box mt={5}></Box>
+              <Box mt={2}></Box>
+              {this.state.usersWorksList.map(item => (
+                <Container>
+                  <WorkCard item={item} />
+                  <Box mt={2}></Box>
+                </Container>
+              ))}
+            </Card>
           </Grid>
         </Grid>
       </Container>
