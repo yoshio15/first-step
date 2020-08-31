@@ -16,6 +16,9 @@ const useStyle = makeStyles(theme => ({
   title: {
     flexGrow: 1,
   },
+  titleLogo: {
+    cursor: "pointer",
+  },
   loginBtn: {
     marginRight: theme.spacing(2)
   },
@@ -45,6 +48,7 @@ const AppHeader: React.FC = () => {
           <div className={classes.title}>
             <img
               src={HeaderImg}
+              className={classes.titleLogo}
               alt='First-Step'
               width='170px'
               height='50px'
