@@ -149,6 +149,7 @@ class Login extends React.Component<Props, State> {
                   required
                   fullWidth
                   error={this.state.isSignUpFailed}
+                  helperText='※ 登録後ユーザ名は変更出来ません。'
                 ></TextField>
                 <TextField
                   variant='outlined'
