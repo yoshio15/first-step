@@ -87,7 +87,6 @@ class MyPageEdit extends React.Component<IProps, IState> {
       userIconUrl: PATHS.ICONS_FOLDER_URL + '/' + response.user_id
     })
   }
-  private handleUserNameInput = (e: any) => { this.setState({ userName: e.target.value }) }
   private handleUserSummaryInput = (e: any) => { this.setState({ userSummary: e.target.value }) }
   private goBackToMyPage = () => { this.props.history.push(`/mypage/${this.state.userId}`) }
   private isValidateInputs = () => {
@@ -202,6 +201,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                   </Grid>
                   <Grid item sm={10}>
                     <Typography className={classes.subTitle}>ユーザ名</Typography>
+                    {/** 一旦ユーザー名は変更出来ないように **/}
                     <TextField
                       required
                       fullWidth
@@ -209,9 +209,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                       variant="outlined"
                       margin="normal"
                       value={this.state.userName}
-                      onChange={this.handleUserNameInput}
-                      error={!this.state.isValidatedUserName}
-                      helperText={!this.state.isValidatedUserName ? this.state.userNameErrorMsg: ''}
+                      disabled
                     />
                   </Grid>
                   <Grid item sm={12}>
