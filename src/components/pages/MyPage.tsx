@@ -2,6 +2,7 @@ import React from 'react'
 import * as H from 'history'
 import { Container, Grid, Box, Card, CardContent, Typography, createStyles } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
+import Store from '../../store/index'
 import API from '../../utils/api'
 import { PATHS } from '../../constants/config'
 import WorkCard, { WorkItemI } from '../parts/WorkCard'
@@ -83,7 +84,7 @@ class MyPage extends React.Component<IProps, IState> {
                       <Grid container justify='center' direction='column' alignItems='center'>
                         <img src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`} width='104' height='104' />
                         <Typography className={classes.userName}>{this.state.userName}</Typography>
-                        <EditProfileButton userId={this.state.userId} />
+                        {Store.getState().store.id === this.state.userId && <EditProfileButton userId={this.state.userId} />}
                       </Grid>
                     </CardContent>
                   </Card>
