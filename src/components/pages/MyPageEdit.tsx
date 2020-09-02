@@ -210,6 +210,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                       margin="normal"
                       value={this.state.userName}
                       disabled
+                      helperText="※ ユーザ名は変更できません。"
                     />
                   </Grid>
                   <Grid item sm={12}>
