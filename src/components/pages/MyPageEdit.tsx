@@ -7,6 +7,7 @@ import API from '../../utils/api'
 import { PATHS, MESSAGES } from '../../constants/config'
 import { formatRequestForUserInfo } from '../../utils/formatter'
 import LoadingArea from '../parts/LoadingArea'
+import PostDialog from '../parts/PostDialog'
 
 const styles = (theme: Theme): StyleRules => createStyles({
   subTitle: {
@@ -46,6 +47,7 @@ interface IState {
   userNameErrorMsg: string,
   isValidatedUserSummary: boolean,
   userSummaryErrorMsg: string,
+  isOpen: boolean,
 }
 class MyPageEdit extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -67,6 +69,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
     userNameErrorMsg: '',
     isValidatedUserSummary: true,
     userSummaryErrorMsg: '',
+    isOpen: false
   }
   componentDidMount() {
     this.getUser()
@@ -246,8 +249,13 @@ class MyPageEdit extends React.Component<IProps, IState> {
                   <Button
                     color='primary'
                     variant='contained'
-                    onClick={() => { this.updateUserProfile() }}
+                    onClick={() => { this.setState({isOpen: true}) }}
                   >保存</Button>
+                  <PostDialog
+                    isOpen={this.state.isOpen}
+                    handleClose={() => this.setState({ isOpen: false })}
+                    execute={() => this.updateUserProfile()}
+                  />
                 </Grid>
               </CardActions>
             </Card>
