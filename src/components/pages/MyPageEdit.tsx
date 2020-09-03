@@ -4,7 +4,7 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { Container, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, createStyles } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import API from '../../utils/api'
-import { PATHS, MESSAGES } from '../../constants/config'
+import { PATHS, MESSAGES, DIALOG_MESSAGES } from '../../constants/config'
 import { formatRequestForUserInfo } from '../../utils/formatter'
 import LoadingArea from '../parts/LoadingArea'
 import PostDialog from '../parts/PostDialog'
@@ -255,6 +255,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                     isOpen={this.state.isOpen}
                     handleClose={() => this.setState({ isOpen: false })}
                     execute={() => this.updateUserProfile()}
+                    message={DIALOG_MESSAGES.EDIT_PROFILE}
                   />
                 </Grid>
               </CardActions>

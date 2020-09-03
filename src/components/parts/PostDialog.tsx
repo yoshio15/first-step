@@ -4,7 +4,8 @@ import { Button, Dialog, DialogTitle,DialogContent, DialogContentText, DialogAct
 interface IProps {
   isOpen: boolean,
   handleClose: any,
-  execute: any
+  execute: any,
+  message: string,
 }
 
 const PostDialog: React.FC<IProps> = (props) => {
@@ -17,7 +18,7 @@ const PostDialog: React.FC<IProps> = (props) => {
     >
       <DialogTitle>投稿確認</DialogTitle>
       <DialogContent>
-        <DialogContentText>本当に作品を登録してよろしいですか？</DialogContentText>
+        <DialogContentText>{props.message}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button color='primary' onClick={props.handleClose}>キャンセル</Button>
