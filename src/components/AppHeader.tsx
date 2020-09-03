@@ -1,13 +1,13 @@
 import React from 'react';
 import { withRouter, Link, useHistory } from 'react-router-dom'
-import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
+import { AppBar, Toolbar, Button, Avatar, Menu, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Create from '@material-ui/icons/Create';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import {Create, AccountBox, ExitToApp} from '@material-ui/icons';
 import Store from '../store/index'
 import Actions from '../store/action'
 import HeaderImg from '../static/header.png'
+import { PATHS } from '../constants/config'
 
 const useStyle = makeStyles(theme => ({
   headerStyle: {
@@ -59,11 +59,19 @@ const AppHeader: React.FC = () => {
             onClick={() => logout()}
             component={Link}
             to='/login'
-          ><ExitToAppIcon color='primary' />ログアウト</Button>
+          ><ExitToApp color='primary' />ログアウト</Button>
           <Button
             component={Link}
             to='/post-work'
           ><Create color='primary' />投稿する</Button>
+          <Avatar src={`${PATHS.ICONS_FOLDER_URL}/${Store.getState().store.id}`} />
+          <Menu
+            open={true}
+          >
+            <MenuItem><AccountBox color='primary' />マイページ</MenuItem>
+            <MenuItem><Create color='primary' />投稿する</MenuItem>
+            <MenuItem><ExitToApp color='primary' />ログアウト</MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
     )
