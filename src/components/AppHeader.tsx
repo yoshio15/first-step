@@ -3,7 +3,7 @@ import { withRouter, Link, useHistory } from 'react-router-dom'
 import { AppBar, Toolbar, Button, Avatar, Menu, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import {Create, AccountBox, ExitToApp} from '@material-ui/icons';
+import { Create, AccountBox, ExitToApp } from '@material-ui/icons';
 import Store from '../store/index'
 import Actions from '../store/action'
 import HeaderImg from '../static/header.png'
@@ -29,18 +29,24 @@ const useStyle = makeStyles(theme => ({
 })
 )
 
-const logout = () => {
-  const emptyUserInfo = {
-    id: '',
-    user: ''
-  }
-  Store.dispatch(Actions.updateUser(emptyUserInfo))
-}
 
 const AppHeader: React.FC = () => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const handleClick = (event: any) => setAnchorEl(event.currentTarget)
+  const handleClose = () => setAnchorEl(null)
   const classes = useStyle()
   const history = useHistory()
   const goToWorksListPage = () => history.push('/works-list')
+  const goToPostWorkPage = () => history.push('/post-work')
+  const goToMyPage = () => history.push(`/mypage/${Store.getState().store.id}`)
+  const logout = () => {
+    const emptyUserInfo = {
+      id: '',
+      user: ''
+    }
+    Store.dispatch(Actions.updateUser(emptyUserInfo))
+    history.push('/login')
+  }
   if (Store.getState().store.user) {
     return (
       <AppBar position='static' className={classes.headerStyle}>
@@ -55,22 +61,25 @@ const AppHeader: React.FC = () => {
               onClick={() => goToWorksListPage()}
             />
           </div>
-          <Button
-            onClick={() => logout()}
-            component={Link}
-            to='/login'
-          ><ExitToApp color='primary' />ログアウト</Button>
-          <Button
-            component={Link}
-            to='/post-work'
-          ><Create color='primary' />投稿する</Button>
-          <Avatar src={`${PATHS.ICONS_FOLDER_URL}/${Store.getState().store.id}`} />
+          <Avatar
+            src={`${PATHS.ICONS_FOLDER_URL}/${Store.getState().store.id}`}
+            onClick={handleClick}
+          />
           <Menu
-            open={true}
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
           >
-            <MenuItem><AccountBox color='primary' />マイページ</MenuItem>
-            <MenuItem><Create color='primary' />投稿する</MenuItem>
-            <MenuItem><ExitToApp color='primary' />ログアウト</MenuItem>
+            <MenuItem
+              onClick={() => goToMyPage()}
+            ><AccountBox color='primary' />マイページ</MenuItem>
+            <MenuItem
+              onClick={() => goToPostWorkPage()}
+            ><Create color='primary' />投稿する</MenuItem>
+            <MenuItem
+              onClick={() => logout()}
+            ><ExitToApp color='primary' />ログアウト</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
