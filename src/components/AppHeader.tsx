@@ -25,6 +25,12 @@ const useStyle = makeStyles(theme => ({
   signUpBtn: {
     backgroundColor: "#eba134",
     color: '#fff'
+  },
+  avatar: {
+    cursor: 'pointer',
+  },
+  icon: {
+    marginRight: '10px',
   }
 })
 )
@@ -64,6 +70,7 @@ const AppHeader: React.FC = () => {
           <Avatar
             src={`${PATHS.ICONS_FOLDER_URL}/${Store.getState().store.id}`}
             onClick={handleClick}
+            className={classes.avatar}
           />
           <Menu
             anchorEl={anchorEl}
@@ -73,13 +80,13 @@ const AppHeader: React.FC = () => {
           >
             <MenuItem
               onClick={() => goToMyPage()}
-            ><AccountBox color='primary' />マイページ</MenuItem>
+            ><AccountBox color='primary' className={classes.icon} />マイページ</MenuItem>
             <MenuItem
               onClick={() => goToPostWorkPage()}
-            ><Create color='primary' />投稿する</MenuItem>
+            ><Create color='primary' className={classes.icon} />投稿する</MenuItem>
             <MenuItem
               onClick={() => logout()}
-            ><ExitToApp color='primary' />ログアウト</MenuItem>
+            ><ExitToApp color='primary' className={classes.icon} />ログアウト</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
