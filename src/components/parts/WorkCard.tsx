@@ -18,7 +18,10 @@ interface PropsI extends WithStyles<typeof styles> {
 }
 const styles = (): StyleRules => createStyles({
   workCard: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    '&:hover': {
+      background: "#f5f5f5",
+   }
   },
   userIcon: {
     borderRadius: '50%',
