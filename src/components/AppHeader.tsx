@@ -80,13 +80,13 @@ const AppHeader: React.FC = () => {
           >
             <MenuItem
               onClick={() => goToMyPage()}
-            ><AccountBox color='primary' className={classes.icon} />マイページ</MenuItem>
+            ><AccountBox color='inherit' className={classes.icon} />マイページ</MenuItem>
             <MenuItem
               onClick={() => goToPostWorkPage()}
-            ><Create color='primary' className={classes.icon} />投稿する</MenuItem>
+            ><Create color='inherit' className={classes.icon} />投稿する</MenuItem>
             <MenuItem
               onClick={() => logout()}
-            ><ExitToApp color='primary' className={classes.icon} />ログアウト</MenuItem>
+            ><ExitToApp color='inherit' className={classes.icon} />ログアウト</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
