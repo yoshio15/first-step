@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { Grid, Typography, Card, CardContent, createStyles } from '@material-ui/core'
 import { withStyles, WithStyles, StyleRules } from '@material-ui/core/styles';
+import { HighlightOff } from '@material-ui/icons/';
 import { PATHS } from '../../constants/config'
 
 export interface WorkItemI {
@@ -49,7 +50,7 @@ const WorkCard: React.FC<PropsI> = (props: PropsI) => {
       variant='outlined'
       onClick={() => goToDescriptionPage()}
     >
-      <CardContent style={{paddingBottom: '16px'}}>
+      <CardContent style={{ paddingBottom: '16px' }}>
         <Grid container>
           <Grid className={classes.userIconArea} item>
             <img
@@ -69,6 +70,9 @@ const WorkCard: React.FC<PropsI> = (props: PropsI) => {
                 by {item.userName}, at {item.postedAt}
               </Typography>
             </Grid>
+          </Grid>
+          <Grid item>
+            <HighlightOff />
           </Grid>
         </Grid>
       </CardContent>
