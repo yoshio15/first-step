@@ -92,7 +92,9 @@ class MyPage extends React.Component<IProps, IState> {
                 <Grid item sm={8}>
                   <Card variant='outlined' className={classes.userSummaryCard}>
                     <CardContent>
-                      <Typography className={classes.userSummary}>{this.state.userSummary}</Typography>
+                      <Typography className={classes.userSummary}>
+                        {this.state.userSummary ? this.state.userSummary : "自己紹介文を登録してみましょう。"}
+                      </Typography>
                     </CardContent>
                   </Card>
                 </Grid>
