@@ -4,7 +4,7 @@ import { Grid, Box, CircularProgress, LinearProgress } from '@material-ui/core'
 const LoadingArea: React.FC = () => {
   return (
     <div>
-      <LinearProgress />
+      {/* <LinearProgress /> */}
       <Box mt={3}></Box>
       <Grid container justify='center'>
         <Grid xs={1} item>
