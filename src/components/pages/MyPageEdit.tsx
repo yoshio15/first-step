@@ -226,6 +226,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                       rows="10"
                       variant="outlined"
                       margin="normal"
+                      placeholder="自己紹介文を入力して下さい。 ※400文字以内"
                       value={this.state.userSummary}
                       onChange={this.handleUserSummaryInput}
                       error={!this.state.isValidatedUserSummary}
