@@ -97,8 +97,8 @@ class MyPageEdit extends React.Component<IProps, IState> {
     let isOkUserSummary;
     if (this.state.userName.length == 0 || this.state.userName.length > 30) {
       this.setState((state, props) => ({
-          isValidatedUserName: false,
-          userNameErrorMsg: MESSAGES.USER_NAME_IS_TOO_LONG
+        isValidatedUserName: false,
+        userNameErrorMsg: MESSAGES.USER_NAME_IS_TOO_LONG
       }))
       isOkUserName = false
     } else {
@@ -170,96 +170,100 @@ class MyPageEdit extends React.Component<IProps, IState> {
             <Box mt={5}></Box>
             <Card variant='outlined'>
               {this.state.loading && <LoadingArea />}
-              <CardContent>
-                <Grid container justify='center'>
-                  <Grid item>
-                    <img
-                      src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`}
-                      width='32'
-                      height='32'
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant='h6'>{this.state.userName} プロフィール編集</Typography>
-                  </Grid>
-                </Grid>
-                <Box mt={3}></Box>
-                <Grid container>
-                  <Grid item sm={2}>
+              {!this.state.loading &&
+                <div>
+                  <CardContent>
                     <Grid container justify='center'>
-                      <img
-                        src={this.state.userIconUrl}
-                        width='104'
-                        height='104'
-                        onClick={() => this.clickFileUploadBtn()}
-                      />
-                      <input
-                        id="file-input"
-                        type="file"
-                        value=""
-                        style={{ display: "none" }}
-                        onChange={this.fileHandler}
+                      <Grid item>
+                        <img
+                          src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`}
+                          width='32'
+                          height='32'
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant='h6'>{this.state.userName} プロフィール編集</Typography>
+                      </Grid>
+                    </Grid>
+                    <Box mt={3}></Box>
+                    <Grid container>
+                      <Grid item sm={2}>
+                        <Grid container justify='center'>
+                          <img
+                            src={this.state.userIconUrl}
+                            width='104'
+                            height='104'
+                            onClick={() => this.clickFileUploadBtn()}
+                          />
+                          <input
+                            id="file-input"
+                            type="file"
+                            value=""
+                            style={{ display: "none" }}
+                            onChange={this.fileHandler}
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid item sm={10}>
+                        <Typography className={classes.subTitle}>ユーザ名</Typography>
+                        {/** 一旦ユーザー名は変更出来ないように **/}
+                        <TextField
+                          required
+                          fullWidth
+                          rows="10"
+                          variant="outlined"
+                          margin="normal"
+                          value={this.state.userName}
+                          disabled
+                          helperText="※ ユーザ名は変更できません。"
+                        />
+                      </Grid>
+                      <Grid item sm={12}>
+                        <Box mt={5}></Box>
+                        <Typography className={classes.subTitle}>自己紹介</Typography>
+                        <TextField
+                          required
+                          fullWidth
+                          multiline
+                          rows="10"
+                          variant="outlined"
+                          margin="normal"
+                          placeholder="自己紹介文を入力して下さい。 ※400文字以内"
+                          value={this.state.userSummary}
+                          onChange={this.handleUserSummaryInput}
+                          error={!this.state.isValidatedUserSummary}
+                          helperText={!this.state.isValidatedUserSummary ? this.state.userSummaryErrorMsg : ''}
+                        />
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                  <CardActions>
+                    <Grid
+                      container
+                      direction='row'
+                      justify='flex-end'
+                    >
+                      <Button
+                        color='primary'
+                        variant='outlined'
+                        onClick={() => this.goBackToMyPage()}
+                        className={classes.cancelBtn}
+                      >キャンセル</Button>
+                      <Button
+                        color='primary'
+                        variant='contained'
+                        onClick={() => { this.setState({ isOpen: true }) }}
+                      >保存</Button>
+                      <PostDialog
+                        isOpen={this.state.isOpen}
+                        handleClose={() => this.setState({ isOpen: false })}
+                        execute={() => this.updateUserProfile()}
+                        message={DIALOG_MESSAGES.EDIT_PROFILE}
                       />
                     </Grid>
-                  </Grid>
-                  <Grid item sm={10}>
-                    <Typography className={classes.subTitle}>ユーザ名</Typography>
-                    {/** 一旦ユーザー名は変更出来ないように **/}
-                    <TextField
-                      required
-                      fullWidth
-                      rows="10"
-                      variant="outlined"
-                      margin="normal"
-                      value={this.state.userName}
-                      disabled
-                      helperText="※ ユーザ名は変更できません。"
-                    />
-                  </Grid>
-                  <Grid item sm={12}>
-                    <Box mt={5}></Box>
-                    <Typography className={classes.subTitle}>自己紹介</Typography>
-                    <TextField
-                      required
-                      fullWidth
-                      multiline
-                      rows="10"
-                      variant="outlined"
-                      margin="normal"
-                      placeholder="自己紹介文を入力して下さい。 ※400文字以内"
-                      value={this.state.userSummary}
-                      onChange={this.handleUserSummaryInput}
-                      error={!this.state.isValidatedUserSummary}
-                      helperText={!this.state.isValidatedUserSummary ? this.state.userSummaryErrorMsg: ''}
-                    />
-                  </Grid>
-                </Grid>
-              </CardContent>
-              <CardActions>
-                <Grid
-                  container
-                  direction='row'
-                  justify='flex-end'
-                >
-                  <Button
-                    color='primary'
-                    variant='outlined'
-                    onClick={() => this.goBackToMyPage()}
-                    className={classes.cancelBtn}
-                  >キャンセル</Button>
-                  <Button
-                    color='primary'
-                    variant='contained'
-                    onClick={() => { this.setState({isOpen: true}) }}
-                  >保存</Button>
-                  <PostDialog
-                    isOpen={this.state.isOpen}
-                    handleClose={() => this.setState({ isOpen: false })}
-                    execute={() => this.updateUserProfile()}
-                    message={DIALOG_MESSAGES.EDIT_PROFILE}
-                  />
-                </Grid>
-              </CardActions>
+                  </CardActions>
+                </div>
+              }
             </Card>
           </Grid>
         </Grid>
