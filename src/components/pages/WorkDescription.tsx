@@ -92,44 +92,48 @@ class WorkDescription extends React.Component<IProps, IState> {
             <Box mt={5}></Box>
             <Card variant='outlined'>
               {this.state.loading && <LoadingArea />}
-              <CardContent>
-                <Grid container>
-                  <Grid item sm={2}>
-                    <Link to={`/mypage/${this.state.userId}`}>
-                      <Typography color='textSecondary'>
-                        {this.state.userName}
-                      </Typography>
-                    </Link>
-                  </Grid>
-                  <Grid item sm={2}>
-                    <Typography color='textSecondary'>{this.state.postedAt}</Typography>
-                  </Grid>
-                </Grid>
-                <Box mt={3}></Box>
-                <Typography color='textPrimary' variant='h5'>{this.state.title}</Typography>
-                <Box mt={3}></Box>
-                <Typography className={classes.description}>{this.state.description}</Typography>
-              </CardContent>
-              <CardActions>
-                <Grid
-                  container
-                  direction='row'
-                  justify='flex-end'
-                >
-                  <Button
-                    color='primary'
-                    component={Link}
-                    to='../../works-list'
-                    variant='outlined'
-                    className={classes.backBtn}
-                  >作品一覧に戻る</Button>
-                  <Button
-                    color='primary'
-                    variant='contained'
-                    onClick={() => this.goToWorkPage()}
-                  >作品を見る</Button>
-                </Grid>
-              </CardActions>
+              {!this.state.loading &&
+                <div>
+                  <CardContent>
+                    <Grid container>
+                      <Grid item sm={2}>
+                        <Link to={`/mypage/${this.state.userId}`}>
+                          <Typography color='textSecondary'>
+                            {this.state.userName}
+                          </Typography>
+                        </Link>
+                      </Grid>
+                      <Grid item sm={2}>
+                        <Typography color='textSecondary'>{this.state.postedAt}</Typography>
+                      </Grid>
+                    </Grid>
+                    <Box mt={3}></Box>
+                    <Typography color='textPrimary' variant='h5'>{this.state.title}</Typography>
+                    <Box mt={3}></Box>
+                    <Typography className={classes.description}>{this.state.description}</Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Grid
+                      container
+                      direction='row'
+                      justify='flex-end'
+                    >
+                      <Button
+                        color='primary'
+                        component={Link}
+                        to='../../works-list'
+                        variant='outlined'
+                        className={classes.backBtn}
+                      >作品一覧に戻る</Button>
+                      <Button
+                        color='primary'
+                        variant='contained'
+                        onClick={() => this.goToWorkPage()}
+                      >作品を見る</Button>
+                    </Grid>
+                  </CardActions>
+                </div>
+              }
             </Card>
           </Grid>
         </Grid>
