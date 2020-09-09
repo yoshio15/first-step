@@ -13,6 +13,9 @@ const styles = (theme: Theme): StyleRules => createStyles({
   subTitle: {
     fontWeight: 'bold'
   },
+  iconImg: {
+    cursor: 'pointer'
+  },
   cancelBtn: {
     marginRight: theme.spacing(2)
   },
@@ -193,6 +196,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                             src={this.state.userIconUrl}
                             width='104'
                             height='104'
+                            className={classes.iconImg}
                             onClick={() => this.clickFileUploadBtn()}
                           />
                           <input
