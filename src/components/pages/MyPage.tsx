@@ -77,28 +77,30 @@ class MyPage extends React.Component<IProps, IState> {
             <Card variant='outlined'>
               {this.state.loading && <LoadingArea />}
               <Box mt={3}></Box>
-              <Grid container justify='space-evenly'>
-                <Grid item sm={3}>
-                  <Card variant='outlined'>
-                    <CardContent>
-                      <Grid container justify='center' direction='column' alignItems='center'>
-                        <img src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`} width='104' height='104' />
-                        <Typography className={classes.userName}>{this.state.userName}</Typography>
-                        {Store.getState().store.id === this.state.userId && <EditProfileButton userId={this.state.userId} />}
-                      </Grid>
-                    </CardContent>
-                  </Card>
+              {!this.state.loading &&
+                <Grid container justify='space-evenly'>
+                  <Grid item sm={3}>
+                    <Card variant='outlined'>
+                      <CardContent>
+                        <Grid container justify='center' direction='column' alignItems='center'>
+                          <img src={`${PATHS.ICONS_FOLDER_URL}/${this.state.userId}`} width='104' height='104' />
+                          <Typography className={classes.userName}>{this.state.userName}</Typography>
+                          {Store.getState().store.id === this.state.userId && <EditProfileButton userId={this.state.userId} />}
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item sm={8}>
+                    <Card variant='outlined' className={classes.userSummaryCard}>
+                      <CardContent>
+                        <Typography className={classes.userSummary}>
+                          {this.state.userSummary ? this.state.userSummary : "自己紹介文を登録してみましょう。"}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
                 </Grid>
-                <Grid item sm={8}>
-                  <Card variant='outlined' className={classes.userSummaryCard}>
-                    <CardContent>
-                      <Typography className={classes.userSummary}>
-                        {this.state.userSummary ? this.state.userSummary : "自己紹介文を登録してみましょう。"}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
+              }
               <Box mt={5}></Box>
               <Box mt={2}></Box>
               {this.state.usersWorksList.map(item => (
