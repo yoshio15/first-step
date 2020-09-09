@@ -43,14 +43,21 @@ const AppHeader: React.FC = () => {
   const classes = useStyle()
   const history = useHistory()
   const goToWorksListPage = () => history.push('/works-list')
-  const goToPostWorkPage = () => history.push('/post-work')
-  const goToMyPage = () => history.push(`/mypage/${Store.getState().store.id}`)
+  const goToPostWorkPage = () => {
+    history.push('/post-work')
+    handleClose()
+  }
+  const goToMyPage = () => {
+    history.push(`/mypage/${Store.getState().store.id}`)
+    handleClose()
+  }
   const logout = () => {
     const emptyUserInfo = {
       id: '',
       user: ''
     }
     Store.dispatch(Actions.updateUser(emptyUserInfo))
+    handleClose()
     history.push('/login')
   }
   if (Store.getState().store.user) {
