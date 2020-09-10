@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { API } from 'aws-amplify'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, CircularProgress, LinearProgress, Fade, createStyles } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import { PATHS, API_GATEWAY } from '../../constants/config'
 import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
+import API from '../../utils/api'
 import LoadingArea from '../parts/LoadingArea'
 
 interface IResponse {
@@ -65,21 +65,17 @@ class WorkDescription extends React.Component<IProps, IState> {
     const userId = this.props.match.params.user_id
     const path = `${PATHS.GET.WORK_PATH}/${workId}/${userId}`
     this.setState({ loading: true })
-    await API.get(API_GATEWAY.NAME, path, {})
-      .then(res => {
-        console.log(res)
-        this.setState({
-          workId: res.work_id,
-          title: res.title,
-          description: res.description,
-          userId: res.user_id,
-          userName: res.user_name,
-          postedAt: formatLinuxTimeToLocaleDate(res.posted_at),
-          loading: false
-        })
-      }).catch(err => {
-        console.log(err)
-      })
+    const res = await API.API_GATEWAY.get(path)
+    console.log(res)
+    this.setState({
+      workId: res.work_id,
+      title: res.title,
+      description: res.description,
+      userId: res.user_id,
+      userName: res.user_name,
+      postedAt: formatLinuxTimeToLocaleDate(res.posted_at),
+      loading: false
+    })
   }
   private goToWorkPage = () => { window.open(`${PATHS.BASE_URL}/${this.state.workId}`, '_blank') }
   render() {
