@@ -38,17 +38,20 @@ export const MESSAGES = {
 
 export const DIALOG_TITLE = {
   POST_WORK: '投稿確認',
-  EDIT_PROFILE: '編集確認'
+  EDIT_PROFILE: '編集確認',
+  DELETE_WORK: '削除確認'
 }
 
 export const DIALOG_MESSAGES = {
   POST_WORK: '本当に作品を登録してよろしいですか？',
-  EDIT_PROFILE: 'プロフィールを編集します。よろしいですか？'
+  EDIT_PROFILE: 'プロフィールを編集します。よろしいですか？',
+  DELETE_WORK: '作品を削除します。よろしいですか？'
 }
 
 export const DIALOG_EXEC_MSG = {
   POST_WORK: '投稿する',
-  EDIT_PROFILE: '編集する'
+  EDIT_PROFILE: '編集する',
+  DELETE_WORK: '削除する'
 }
 
 export class APP_CONF {

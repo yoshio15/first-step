@@ -4,10 +4,11 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { Container, Grid, Button, Box, Card, CardActions, CardContent, Typography, createStyles } from '@material-ui/core'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
-import { PATHS } from '../../constants/config'
+import { PATHS, DIALOG_TITLE, DIALOG_MESSAGES, DIALOG_EXEC_MSG } from '../../constants/config'
 import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
 import API from '../../utils/api'
 import LoadingArea from '../parts/LoadingArea'
+import ConfirmDialog from '../parts/ConfirmDialog'
 
 interface IResponse {
   work_id: string,
@@ -33,6 +34,7 @@ interface IState {
   userName: string,
   postedAt: string,
   loading: boolean,
+  isOpen: boolean,
 }
 const styles = (theme: Theme): StyleRules => createStyles({
   description: {
@@ -57,6 +59,7 @@ class WorkDescription extends React.Component<IProps, IState> {
     userName: '',
     postedAt: '',
     loading: false,
+    isOpen: false,
   }
   componentDidMount() {
     this.getWork()
@@ -80,6 +83,9 @@ class WorkDescription extends React.Component<IProps, IState> {
       postedAt: formatLinuxTimeToLocaleDate(res.posted_at),
       loading: false
     })
+  }
+  private deleteWork = async () => {
+    console.log('deleteWork')
   }
   private goToWorkPage = () => { window.open(`${PATHS.BASE_URL}/${this.state.workId}`, '_blank') }
   render() {
@@ -110,10 +116,21 @@ class WorkDescription extends React.Component<IProps, IState> {
                       <Grid item sm={1}>
                         <Grid container justify='flex-end'>
                           <Grid item>
-                            <HighlightOffIcon className={classes.icon} />
+                            <HighlightOffIcon
+                              className={classes.icon}
+                              onClick={() => this.setState({ isOpen: true })}
+                            />
                           </Grid>
                         </Grid>
                       </Grid>
+                      <ConfirmDialog
+                        isOpen={this.state.isOpen}
+                        handleClose={() => this.setState({ isOpen: false })}
+                        execute={() => this.deleteWork()}
+                        title={DIALOG_TITLE.DELETE_WORK}
+                        message={DIALOG_MESSAGES.DELETE_WORK}
+                        execMsg={DIALOG_EXEC_MSG.DELETE_WORK}
+                      />
                     </Grid>
                     <Box mt={3}></Box>
                     <Typography color='textPrimary' variant='h5'>{this.state.title}</Typography>
