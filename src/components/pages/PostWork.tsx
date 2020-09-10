@@ -11,7 +11,7 @@ import PostDialog from '../parts/PostDialog'
 import Store from '../../store/index'
 import { getUniqueId } from '../../utils/common'
 import API from '../../utils/api'
-import { PATHS, MESSAGES, DIALOG_MESSAGES } from '../../constants/config'
+import { PATHS, MESSAGES, DIALOG_MESSAGES, DIALOG_TITLE, DIALOG_EXEC_MSG } from '../../constants/config'
 
 const styles = (theme: Theme): StyleRules => createStyles({
   subTitle: {
@@ -268,7 +268,9 @@ class PostWork extends React.Component<Props, State> {
                   isOpen={this.state.isOpen}
                   handleClose={() => this.setState({ isOpen: false })}
                   execute={this.postWork}
+                  title={DIALOG_TITLE.POST_WORK}
                   message={DIALOG_MESSAGES.POST_WORK}
+                  execMsg={DIALOG_EXEC_MSG.POST_WORK}
                 />
                 <div className={classes.spacer}></div>
               </CardContent>

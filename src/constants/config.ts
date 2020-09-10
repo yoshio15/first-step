@@ -36,9 +36,19 @@ export const MESSAGES = {
   USER_SUMMARY_IS_TOO_LONG: '自己紹介文は400文字以内で入力してください。'
 }
 
+export const DIALOG_TITLE = {
+  POST_WORK: '投稿確認',
+  EDIT_PROFILE: '編集確認'
+}
+
 export const DIALOG_MESSAGES = {
   POST_WORK: '本当に作品を登録してよろしいですか？',
   EDIT_PROFILE: 'プロフィールを編集します。よろしいですか？'
+}
+
+export const DIALOG_EXEC_MSG = {
+  POST_WORK: '投稿する',
+  EDIT_PROFILE: '編集する'
 }
 
 export class APP_CONF {
