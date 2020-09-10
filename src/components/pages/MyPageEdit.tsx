@@ -7,7 +7,7 @@ import API from '../../utils/api'
 import { PATHS, MESSAGES, DIALOG_MESSAGES, DIALOG_TITLE, DIALOG_EXEC_MSG } from '../../constants/config'
 import { formatRequestForUserInfo } from '../../utils/formatter'
 import LoadingArea from '../parts/LoadingArea'
-import PostDialog from '../parts/PostDialog'
+import ConfirmDialog from '../parts/ConfirmDialog'
 
 const styles = (theme: Theme): StyleRules => createStyles({
   subTitle: {
@@ -258,7 +258,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
                         variant='contained'
                         onClick={() => { this.setState({ isOpen: true }) }}
                       >保存</Button>
-                      <PostDialog
+                      <ConfirmDialog
                         isOpen={this.state.isOpen}
                         handleClose={() => this.setState({ isOpen: false })}
                         execute={() => this.updateUserProfile()}

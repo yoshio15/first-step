@@ -7,7 +7,7 @@ import AttachFileIcon from '@material-ui/icons/AttachFile'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import Create from '@material-ui/icons/Create';
-import PostDialog from '../parts/PostDialog'
+import ConfirmDialog from '../parts/ConfirmDialog'
 import Store from '../../store/index'
 import { getUniqueId } from '../../utils/common'
 import API from '../../utils/api'
@@ -264,7 +264,7 @@ class PostWork extends React.Component<Props, State> {
                 <Backdrop className={classes.backdrop} open={this.state.loading}>
                   <CircularProgress color='inherit' />
                 </Backdrop>
-                <PostDialog
+                <ConfirmDialog
                   isOpen={this.state.isOpen}
                   handleClose={() => this.setState({ isOpen: false })}
                   execute={this.postWork}
