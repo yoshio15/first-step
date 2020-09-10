@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { Container, Paper, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, CircularProgress, LinearProgress, Fade, createStyles } from '@material-ui/core'
+import { Container, Grid, Button, Box, Card, CardActions, CardContent, Typography, createStyles } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
-import { PATHS, API_GATEWAY } from '../../constants/config'
+import { PATHS } from '../../constants/config'
 import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
 import API from '../../utils/api'
 import LoadingArea from '../parts/LoadingArea'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { Grid, Typography, Card, CardContent, createStyles } from '@material-ui/core'
 import { withStyles, WithStyles, StyleRules } from '@material-ui/core/styles';
 import { PATHS } from '../../constants/config'
