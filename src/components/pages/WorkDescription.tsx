@@ -6,6 +6,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import { PATHS, DIALOG_TITLE, DIALOG_MESSAGES, DIALOG_EXEC_MSG } from '../../constants/config'
 import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
+import Store from '../../store/index'
 import API from '../../utils/api'
 import LoadingArea from '../parts/LoadingArea'
 import ConfirmDialog from '../parts/ConfirmDialog'
@@ -113,24 +114,26 @@ class WorkDescription extends React.Component<IProps, IState> {
                         <Typography color='textSecondary'>{this.state.postedAt}</Typography>
                       </Grid>
                       <Grid item sm={7} />
-                      <Grid item sm={1}>
-                        <Grid container justify='flex-end'>
-                          <Grid item>
-                            <HighlightOffIcon
-                              className={classes.icon}
-                              onClick={() => this.setState({ isOpen: true })}
-                            />
+                      {Store.getState().store.id === this.state.userId &&
+                        <Grid item sm={1}>
+                          <Grid container justify='flex-end'>
+                            <Grid item>
+                              <HighlightOffIcon
+                                className={classes.icon}
+                                onClick={() => this.setState({ isOpen: true })}
+                              />
+                              <ConfirmDialog
+                                isOpen={this.state.isOpen}
+                                handleClose={() => this.setState({ isOpen: false })}
+                                execute={() => this.deleteWork()}
+                                title={DIALOG_TITLE.DELETE_WORK}
+                                message={DIALOG_MESSAGES.DELETE_WORK}
+                                execMsg={DIALOG_EXEC_MSG.DELETE_WORK}
+                              />
+                            </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                      <ConfirmDialog
-                        isOpen={this.state.isOpen}
-                        handleClose={() => this.setState({ isOpen: false })}
-                        execute={() => this.deleteWork()}
-                        title={DIALOG_TITLE.DELETE_WORK}
-                        message={DIALOG_MESSAGES.DELETE_WORK}
-                        execMsg={DIALOG_EXEC_MSG.DELETE_WORK}
-                      />
+                      }
                     </Grid>
                     <Box mt={3}></Box>
                     <Typography color='textPrimary' variant='h5'>{this.state.title}</Typography>
