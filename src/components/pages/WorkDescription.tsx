@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { Container, Grid, Button, Box, Card, CardActions, CardContent, Typography, createStyles } from '@material-ui/core'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import { PATHS } from '../../constants/config'
 import { formatLinuxTimeToLocaleDate } from '../../utils/formatter'
@@ -40,6 +41,9 @@ const styles = (theme: Theme): StyleRules => createStyles({
   backBtn: {
     marginRight: theme.spacing(2)
   },
+  icon: {
+    cursor: 'pointer'
+  }
 })
 class WorkDescription extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -101,6 +105,14 @@ class WorkDescription extends React.Component<IProps, IState> {
                       </Grid>
                       <Grid item sm={2}>
                         <Typography color='textSecondary'>{this.state.postedAt}</Typography>
+                      </Grid>
+                      <Grid item sm={7} />
+                      <Grid item sm={1}>
+                        <Grid container justify='flex-end'>
+                          <Grid item>
+                            <HighlightOffIcon className={classes.icon} />
+                          </Grid>
+                        </Grid>
                       </Grid>
                     </Grid>
                     <Box mt={3}></Box>
