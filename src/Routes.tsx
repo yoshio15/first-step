@@ -12,6 +12,7 @@ import PostWork from './components/pages/PostWork'
 import WorkDescription from './components/pages/WorkDescription'
 import MyPage from './components/pages/MyPage'
 import MyPageEdit from './components/pages/MyPageEdit'
+import NotFound from './components/pages/404'
 
 let history = createBrowserHistory();
 const Routes: React.FC = () => {
@@ -30,8 +31,10 @@ const Routes: React.FC = () => {
             <Route path='/work-description/:work_id/:user_id' exact component={WorkDescription} />
             <Route path='/mypage/:id' exact component={MyPage} />
             <Route path='/mypage/edit/:id' exact component={MyPageEdit} />
+            <Route component={NotFound} />
           </Switch>
         </Auth>
+        <Route component={NotFound} />
       </Switch>
     </Router>
   );
