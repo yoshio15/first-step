@@ -17,7 +17,7 @@ export const PATHS = {
 }
 
 export const API_GATEWAY = {
-  NAME: 'dev-first-step'
+  NAME: 'dev-first-step-stack'
 }
 
 export const MESSAGES = {

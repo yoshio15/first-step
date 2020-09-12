@@ -8,8 +8,8 @@ const AwsConfig = {
   API: {
     endpoints: [
       {
-        name: "dev-first-step",
-        endpoint: "https://cvghhqntsi.execute-api.ap-northeast-1.amazonaws.com/Stage"
+        name: "dev-first-step-stack",
+        endpoint: "https://5j5l9zh1g2.execute-api.ap-northeast-1.amazonaws.com/Stage"
       }
     ]
   }
