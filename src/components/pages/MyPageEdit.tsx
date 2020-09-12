@@ -1,7 +1,7 @@
 import React from 'react'
 import * as H from 'history'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { Container, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, createStyles } from '@material-ui/core'
+import { Container, Grid, TextField, Button, Box, Card, CardActions, CardContent, Typography, createStyles, CircularProgress, Backdrop } from '@material-ui/core'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import API from '../../utils/api'
 import { PATHS, MESSAGES, DIALOG_MESSAGES, DIALOG_TITLE, DIALOG_EXEC_MSG } from '../../constants/config'
@@ -18,6 +18,10 @@ const styles = (theme: Theme): StyleRules => createStyles({
   },
   cancelBtn: {
     marginRight: theme.spacing(2)
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   },
 })
 interface IWorkEntity {
@@ -51,6 +55,7 @@ interface IState {
   isValidatedUserSummary: boolean,
   userSummaryErrorMsg: string,
   isOpen: boolean,
+  postLoading: boolean,
 }
 class MyPageEdit extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -72,7 +77,8 @@ class MyPageEdit extends React.Component<IProps, IState> {
     userNameErrorMsg: '',
     isValidatedUserSummary: true,
     userSummaryErrorMsg: '',
-    isOpen: false
+    isOpen: false,
+    postLoading: false,
   }
   componentDidMount() {
     this.getUser()
@@ -121,7 +127,11 @@ class MyPageEdit extends React.Component<IProps, IState> {
     return isOkUserName && isOkUserSummary;
   }
   private updateUserProfile = async () => {
-    if (!this.isValidateInputs()) return;
+    this.setState({ isOpen: false, postLoading: true })
+    if (!this.isValidateInputs()) {
+      this.setState({ postLoading: false })
+      return;
+    }
     // ユーザ情報の更新
     await this.updateUserInfoToDynamo()
     // アイコンファイルに変更がある場合
@@ -130,6 +140,7 @@ class MyPageEdit extends React.Component<IProps, IState> {
       console.log(`URL: ${url}`)
       await this.uploadFileToS3(url)
     }
+    this.setState({ postLoading: false })
     this.goBackToMyPage()
   }
   private getPresignedUrl = async () => {
@@ -266,6 +277,9 @@ class MyPageEdit extends React.Component<IProps, IState> {
                         message={DIALOG_MESSAGES.EDIT_PROFILE}
                         execMsg={DIALOG_EXEC_MSG.EDIT_PROFILE}
                       />
+                      <Backdrop className={classes.backdrop} open={this.state.postLoading}>
+                        <CircularProgress color='inherit' />
+                      </Backdrop>
                     </Grid>
                   </CardActions>
                 </div>
