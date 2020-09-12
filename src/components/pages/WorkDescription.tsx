@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import * as H from 'history'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { Container, Grid, Button, Box, Card, CardActions, CardContent, Typography, createStyles } from '@material-ui/core'
+import { Container, Grid, Button, Box, Card, CardActions, CardContent, Typography, createStyles, CircularProgress, Backdrop } from '@material-ui/core'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import { PATHS, DIALOG_TITLE, DIALOG_MESSAGES, DIALOG_EXEC_MSG } from '../../constants/config'
@@ -38,6 +38,7 @@ interface IState {
   postedAt: string,
   loading: boolean,
   isOpen: boolean,
+  deleteLoading: boolean,
 }
 const styles = (theme: Theme): StyleRules => createStyles({
   description: {
@@ -48,7 +49,11 @@ const styles = (theme: Theme): StyleRules => createStyles({
   },
   icon: {
     cursor: 'pointer'
-  }
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 })
 class WorkDescription extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -63,6 +68,7 @@ class WorkDescription extends React.Component<IProps, IState> {
     postedAt: '',
     loading: false,
     isOpen: false,
+    deleteLoading: false,
   }
   componentDidMount() {
     this.getWork()
@@ -88,12 +94,12 @@ class WorkDescription extends React.Component<IProps, IState> {
     })
   }
   private deleteWork = async () => {
-    console.log('deleteWork')
+    this.setState({ isOpen: false, deleteLoading: true })
     const workId = this.props.match.params.work_id
     const userId = this.props.match.params.user_id
     const path = `${PATHS.GET.DELETE_WORK_PATH}/${workId}/${userId}`
     const res = await API.API_GATEWAY.get(path)
-    console.log(res)
+    this.setState({ deleteLoading: false })
     this.goToWorksListPage()
   }
   private goToWorksListPage = () => { this.props.history.push(`/works-list`) }
@@ -139,6 +145,9 @@ class WorkDescription extends React.Component<IProps, IState> {
                                 message={DIALOG_MESSAGES.DELETE_WORK}
                                 execMsg={DIALOG_EXEC_MSG.DELETE_WORK}
                               />
+                              <Backdrop className={classes.backdrop} open={this.state.deleteLoading}>
+                                <CircularProgress color='inherit' />
+                              </Backdrop>
                             </Grid>
                           </Grid>
                         </Grid>
