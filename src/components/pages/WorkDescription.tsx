@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import * as H from 'history'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { Container, Grid, Button, Box, Card, CardActions, CardContent, Typography, createStyles } from '@material-ui/core'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
@@ -20,6 +21,7 @@ interface IResponse {
   posted_at: number
 }
 interface IProps extends WithStyles<typeof styles> {
+  history: H.History,
   match: {
     params: {
       work_id: string,
@@ -87,7 +89,14 @@ class WorkDescription extends React.Component<IProps, IState> {
   }
   private deleteWork = async () => {
     console.log('deleteWork')
+    const workId = this.props.match.params.work_id
+    const userId = this.props.match.params.user_id
+    const path = `${PATHS.GET.DELETE_WORK_PATH}/${workId}/${userId}`
+    const res = await API.API_GATEWAY.get(path)
+    console.log(res)
+    this.goToWorksListPage()
   }
+  private goToWorksListPage = () => { this.props.history.push(`/works-list`) }
   private goToWorkPage = () => { window.open(`${PATHS.BASE_URL}/${this.state.workId}`, '_blank') }
   render() {
     console.log(this.state)

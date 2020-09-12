@@ -1,6 +1,7 @@
 export const PATHS = {
   GET: {
     WORK_PATH: '/get-work',
+    DELETE_WORK_PATH: '/delete-work',
     USER_PATH: '/get-user',
     USER_ICOM_IMG_PATH: '/get-user-icon-img',
     WORKS_LIST_PATH: '/get-works-list',
