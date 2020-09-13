@@ -13,6 +13,7 @@ const useStyle = makeStyles(theme => ({
   },
   textBlock: {
     position: 'absolute',
+    marginTop: '120px'
     // top: '50%',
     // left: '50%',
     // translate: "translateY('-50%')",
@@ -40,7 +41,6 @@ const Usage: React.FC = () => {
           </div>
         </Grid>
         <Grid item xs={6} className={classes.textWrapper}>
-          <Box mt={5}></Box>
           <div className={classes.textBlock}>
             <Typography variant='h5' className={classes.text}>1. HTML/CSSをコーディング</Typography>
             <Box mt={2}></Box>
@@ -48,7 +48,6 @@ const Usage: React.FC = () => {
           </div>
         </Grid>
         <Grid item xs={6} className={classes.textWrapper}>
-          <Box mt={5}></Box>
           <div className={classes.textBlock}>
             <Typography variant='h5' className={classes.text}>2. 作成したHTMLファイルを投稿</Typography>
             <Box mt={2}></Box>
