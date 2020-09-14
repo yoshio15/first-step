@@ -136,7 +136,7 @@ class Login extends React.Component<Props, State> {
               <Grid item xs={11}>
                 <Box mt={2}></Box>
                 <Typography component="h1" variant="h5">
-                  無料会員登録
+                  アカウント新規作成
               </Typography>
                 <Box mt={2}></Box>
                 <TextField
@@ -196,7 +196,7 @@ class Login extends React.Component<Props, State> {
             </Grid>
           </CardContent>
           <CardActions>
-            <Button variant='contained' color='primary' onClick={this.signUp} fullWidth>無料会員登録</Button>
+            <Button variant='contained' color='primary' onClick={this.signUp} fullWidth>アカウントを作成する</Button>
           </CardActions>
         </Card>
       </Container>

@@ -121,7 +121,7 @@ const AppHeader: React.FC = () => {
             className={classes.signUpBtn}
             component={Link}
             to='/sign-up'
-          >無料会員登録</Button>
+          >アカウント新規作成</Button>
         </Toolbar>
       </AppBar>
     )
