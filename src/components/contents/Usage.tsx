@@ -1,6 +1,7 @@
 import React from 'react'
 import Usage_1 from '../../static/usage_1.png'
 import Usage_2 from '../../static/usage_2.png'
+import Usage_3 from '../../static/usage_3.png'
 import { Container, Grid, Typography, Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -13,7 +14,8 @@ const useStyle = makeStyles(theme => ({
   },
   textBlock: {
     position: 'absolute',
-    marginTop: '120px'
+    marginTop: '120px',
+    width: '100%',
     // top: '50%',
     // left: '50%',
     // translate: "translateY('-50%')",
@@ -57,6 +59,18 @@ const Usage: React.FC = () => {
         <Grid item xs={6}>
           <div>
             <img src={Usage_2} alt="First Write HTML/CSS" className={classes.size} />
+          </div>
+        </Grid>
+        <Grid item xs={6}>
+          <div>
+            <img src={Usage_3} alt="First Write HTML/CSS" className={classes.size} />
+          </div>
+        </Grid>
+        <Grid item xs={6} className={classes.textWrapper}>
+          <div className={classes.textBlock}>
+            <Typography variant='h5' className={classes.text}>3. たくさんの人に見てもらいましょう</Typography>
+            <Box mt={2}></Box>
+            <Typography variant='subtitle1' className={classes.text}>自分が書いたHTMLを全世界の人に見てもらいましょう。</Typography>
           </div>
         </Grid>
       </Grid>
