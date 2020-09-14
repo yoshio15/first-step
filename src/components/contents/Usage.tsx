@@ -16,24 +16,16 @@ const useStyle = makeStyles(theme => ({
     position: 'absolute',
     marginTop: '120px',
     width: '100%',
-    // top: '50%',
-    // left: '50%',
-    // translate: "translateY('-50%')",
   },
   text: {
-    // width: '80%',
     paddingLeft: theme.spacing(5),
     paddingRight: theme.spacing(5),
     textAlign: 'center',
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
   }
 }))
 
 const Usage: React.FC = () => {
   const classes = useStyle()
-  // TODO Boxの濫用を避けてCSSで中央配置を実現したい
   return (
     <Container>
       <Grid container>
