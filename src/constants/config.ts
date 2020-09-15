@@ -55,6 +55,10 @@ export const DIALOG_EXEC_MSG = {
   DELETE_WORK: '削除する'
 }
 
+export const GOOGLE_ANALYTICS = {
+  TRACKING_ID: 'UA-139951598-3',
+}
+
 export class APP_CONF {
   static readonly INITIAL_WORKS_TO_DISPLAY = 5
   static readonly ADDITIONAL_WORKS_TO_DISPLAY = 5

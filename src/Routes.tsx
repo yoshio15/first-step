@@ -1,6 +1,8 @@
 import React from 'react';
 import createBrowserHistory from 'history/createBrowserHistory'
 import { Router, Route, Switch } from 'react-router-dom';
+import ReactGA from 'react-ga';
+import { GOOGLE_ANALYTICS } from './constants/config';
 import AppHeader from './components/AppHeader'
 import Auth from './components/Auth'
 import Login from './components/pages/Login';
@@ -14,7 +16,14 @@ import MyPage from './components/pages/MyPage'
 import MyPageEdit from './components/pages/MyPageEdit'
 import NotFound from './components/pages/404'
 
+ReactGA.initialize(GOOGLE_ANALYTICS.TRACKING_ID);
+
 let history = createBrowserHistory();
+history.listen(({ pathname }) => {
+  ReactGA.set({ page: pathname });
+  ReactGA.pageview(pathname);
+});
+
 const Routes: React.FC = () => {
   return (
     <Router history={history}>
