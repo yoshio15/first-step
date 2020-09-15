@@ -113,8 +113,12 @@ class WorkDescription extends React.Component<IProps, IState> {
           <Grid item sm={7}>
             <Box mt={5}></Box>
             <Card variant='outlined'>
-              {this.state.loading && <LoadingArea />}
-              <Box mt={3}></Box>
+              {this.state.loading &&
+                <div>
+                  <LoadingArea />
+                  <Box mt={3}></Box>
+                </div>
+              }
               {!this.state.loading &&
                 <div>
                   <CardContent>
