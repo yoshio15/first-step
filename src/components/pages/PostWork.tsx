@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import * as H from 'history'
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { Container, Card, CardContent, Grid, TextField, Button, Box, Fade, LinearProgress, CircularProgress, Backdrop } from '@material-ui/core'
+import { Container, Card, CardContent, Grid, TextField, Button, Box, CircularProgress, Backdrop } from '@material-ui/core'
 import AttachFileIcon from '@material-ui/icons/AttachFile'
 import withStyles, { WithStyles, StyleRules } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";

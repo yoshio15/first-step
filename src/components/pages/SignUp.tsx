@@ -80,14 +80,13 @@ class Login extends React.Component<Props, State> {
     })
       .then((res) => {
         console.log(res)
-        console.log(res.userSub) // userSubをユーザIDとして設定する
         const request = {
           body: {
             username,
             userId: res.userSub
           }
         }
-        Store.dispatch(Actions.setEmail(email)) // EmailをStoreにセットする
+        Store.dispatch(Actions.setEmail(email))
         API.post(API_GATEWAY.NAME, PATHS.POST.NEW_USER_PATH, request)
           .then(response => {
             console.log(response)
